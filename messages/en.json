@@ -1,0 +1,88 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"nav_home": "Home",
+	"nav_artists": "Artists",
+	"nav_services": "Services",
+	"nav_seasonal": "Seasonal",
+	"nav_blog": "Blog",
+	"nav_inquiry": "Book Us",
+
+	"header_cta_services": "Our services",
+
+	"common_language": "Language",
+	"common_loading": "Loading…",
+	"common_read_more": "Read more",
+	"common_back": "Back",
+	"common_view_all": "View all",
+	"common_get_in_touch": "Get in touch",
+	"common_skip": "Skip",
+	"common_active": "Active",
+
+	"home_hero_eyebrow": "Nair Entertainment",
+	"home_hero_title": "Дэлгэр жаргалтай\nнайрлаарай",
+	"home_hero_subtitle": "Pending — replace from Figma",
+	"home_hero_cta": "Book us",
+
+	"home_intro_body": "Бид ардын <em>язгуур өв, орчин үеийн хэв маяг</em> болон <em>мэргэжлийн найруулгыг</em> нэгтгэн, аливаа баяр наадмыг <em>урлагийн цогц шийдлээр</em> амилуулдаг.",
+	"home_intro_cta": "Our services",
+
+	"home_disciplines_title": "Traditional arts, professional direction and performance",
+	"home_discipline_urtin_duu": "Long song",
+	"home_discipline_ardiin_duu": "Folk song",
+	"home_discipline_khoomii": "Khoomei",
+	"home_discipline_yurool": "Blessings & eulogies",
+	"home_discipline_mongol_bujig": "Mongolian dance",
+	"home_discipline_uran_nugaralt": "Contortion",
+	"home_discipline_tsam_bujig": "Tsam dance",
+	"home_discipline_morin_khuur_quartet": "Morin khuur quartet",
+	"home_discipline_undesnii_khugjim": "National music ensemble",
+
+	"home_collabs_title": "Partners we've worked with",
+
+	"home_why_badge": "Why us?",
+	"home_why_title": "Every feast has its own melody",
+	"home_why_body": "We blend professional craft and meticulous planning with a deep well of artistry — building quality and trust into every event.",
+	"home_why_pill_1": "United craft",
+	"home_why_pill_2": "Professional direction",
+	"home_why_pill_3": "Meticulous logistics",
+	"home_why_pill_4": "Trusted partnership",
+	"home_why_pill_5": "Accountability",
+	"home_why_pill_6": "Experienced team",
+	"home_why_pill_7": "Unforgettable memories",
+	"home_why_pill_8": "Genuine satisfaction",
+
+	"home_faq_title": "Frequently asked questions",
+	"home_faq_sample_q": "How far in advance should I book?",
+	"home_faq_sample_a": "Adding melody to the heart of your celebration and giving guests a taste of live traditional artistry is our mission. Send us a request and we'll come back with a curated proposal of artists shaped to your programme.",
+
+	"services_index_title": "Services",
+	"services_index_subtitle": "Tradition, performance, production.",
+
+	"service_label_programme": "Programme",
+	"service_label_duration": "Duration",
+	"service_label_artists": "Artists",
+	"service_label_plans": "Plans",
+	"service_label_parts": "Parts",
+	"service_label_featured": "Featured",
+	"service_label_inquire": "Inquire",
+	"service_label_price": "Programme price",
+	"service_contact_label": "Get in touch",
+	"service_contact_cta": "Call us",
+
+	"intro_skip": "Skip intro",
+
+	"error_404_title": "Page not found",
+	"error_404_body": "We couldn't find what you were looking for. The link may be broken or the page may have moved.",
+	"error_500_title": "Something went wrong",
+	"error_500_body": "Our end glitched out for a moment. Give it a minute and try again.",
+	"error_generic_title": "An error occurred",
+	"error_back_home": "Back to home",
+
+	"maintenance_title": "Back in a few minutes",
+	"maintenance_body": "We're polishing things up behind the scenes. Hold tight — we'll be back shortly.",
+	"coming_soon_title": "Coming soon",
+	"coming_soon_body": "This corner is still being prepared. Check back in a moment.",
+
+	"footer_rights": "© {year} Nair Entertainment. All rights reserved."
+}

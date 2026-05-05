@@ -1,0 +1,88 @@
+{
+	"$schema": "https://inlang.com/schema/inlang-message-format",
+
+	"nav_home": "Нүүр",
+	"nav_artists": "Уран бүтээлчид",
+	"nav_services": "Үйлчилгээ",
+	"nav_seasonal": "Улирлын",
+	"nav_blog": "Блог",
+	"nav_inquiry": "Захиалга",
+
+	"header_cta_services": "Бидний үйлчилгээ",
+
+	"common_language": "Хэл",
+	"common_loading": "Уншиж байна…",
+	"common_read_more": "Дэлгэрэнгүй",
+	"common_back": "Буцах",
+	"common_view_all": "Бүгдийг харах",
+	"common_get_in_touch": "Холбоо барих",
+	"common_skip": "Алгасах",
+	"common_active": "Идэвхтэй",
+
+	"home_hero_eyebrow": "Nair Entertainment",
+	"home_hero_title": "Дэлгэр жаргалтай\nнайрлаарай",
+	"home_hero_subtitle": "Хүлээгдэж буй — Figma-аас солино",
+	"home_hero_cta": "Захиалах",
+
+	"home_intro_body": "Бид ардын <em>язгуур өв, орчин үеийн хэв маяг</em> болон <em>мэргэжлийн найруулгыг</em> нэгтгэн, аливаа баяр наадмыг <em>урлагийн цогц шийдлээр</em> амилуулдаг.",
+	"home_intro_cta": "Бидний үйлчилгээ",
+
+	"home_disciplines_title": "Уламжлалт урлаг, мэргэжлийн найруулга болон гүйцэтгэл",
+	"home_discipline_urtin_duu": "Уртын дуу",
+	"home_discipline_ardiin_duu": "Ардын дуу",
+	"home_discipline_khoomii": "Хөөмий",
+	"home_discipline_yurool": "Ерөөл магтаал",
+	"home_discipline_mongol_bujig": "Монгол бүжиг",
+	"home_discipline_uran_nugaralt": "Уран нугаралт",
+	"home_discipline_tsam_bujig": "Цамын бүжиг",
+	"home_discipline_morin_khuur_quartet": "Морин хуурын дөрвөл",
+	"home_discipline_undesnii_khugjim": "Үндэсний хөгжмийн цөөхүүл",
+
+	"home_collabs_title": "Хамтран ажилласан байгууллагууд",
+
+	"home_why_badge": "Яагаад бид гэж?",
+	"home_why_title": "Найр бүр өөрийн аялгуутай",
+	"home_why_body": "Мэргэжлийн ур чадвар, нарийн төлөвлөлтийг урлагийн арвин сантай нэгтгэж, арга хэмжээ бүрт чанар, итгэлийг бүрдүүлнэ.",
+	"home_why_pill_1": "Ур чадварын нэгдэл",
+	"home_why_pill_2": "Мэргэжлийн найруулга",
+	"home_why_pill_3": "Нарийн зохион байгуулалт",
+	"home_why_pill_4": "Итгэлт түншлэл, итгэлцэл",
+	"home_why_pill_5": "Хариуцлагатай байдал",
+	"home_why_pill_6": "Туршлагатай хамт олон",
+	"home_why_pill_7": "Мартагдашгүй дурсамж",
+	"home_why_pill_8": "Сэтгэл ханамж",
+
+	"home_faq_title": "Түгээмэл асуулт, хариултууд",
+	"home_faq_sample_q": "Би захиалгаа ямар хугацааны өмнөөс өгөх ёстой вэ?",
+	"home_faq_sample_a": "Найр наадмын тань хойморт аялгуу нэмж, зочдод тань амьд урлагийн гайхамшгийг мэдрүүлэх нь бидний эрхэм зорилго юм. Та өөрийн хүсэлтээ ирүүлснээр бид таны баярын хөтөлбөрт нийцэх шилдэг уран бүтээлчдийн нэгдсэн саналыг түргэн шуурхай хүргэх болно.",
+
+	"services_index_title": "Үйлчилгээ",
+	"services_index_subtitle": "Уламжлал, тоглолт, продакшн.",
+
+	"service_label_programme": "Хөтөлбөр",
+	"service_label_duration": "Үргэлжлэх хугацаа",
+	"service_label_artists": "Уран бүтээлчид",
+	"service_label_plans": "Багцууд",
+	"service_label_parts": "Хэсгүүд",
+	"service_label_featured": "Онцлох",
+	"service_label_inquire": "Захиалах",
+	"service_label_price": "Хөтөлбөрийн үнэ",
+	"service_contact_label": "Бидэнтэй холбогдох",
+	"service_contact_cta": "Утасаар холбогдох",
+
+	"intro_skip": "Танилцуулга алгасах",
+
+	"error_404_title": "Хуудас олдсонгүй",
+	"error_404_body": "Та хайсан хуудас олдсонгүй. Холбоос буруу эсвэл устгагдсан байж магадгүй.",
+	"error_500_title": "Ямар нэг алдаа гарлаа",
+	"error_500_body": "Манайхаас алдаа гарлаа. Хэдхэн минутын дараа дахин оролдоно уу.",
+	"error_generic_title": "Алдаа гарлаа",
+	"error_back_home": "Нүүр хуудас руу буцах",
+
+	"maintenance_title": "Хэдэн минутын дараа уулзацгаая",
+	"maintenance_body": "Бид сайтаа сайжруулахаар богино хугацаанд завсарлага авав. Удалгүй буцаж ирнэ.",
+	"coming_soon_title": "Удалгүй ирнэ",
+	"coming_soon_body": "Энэ хэсэг бэлтгэгдэж байна. Дахиад тун удалгүй ирээрэй.",
+
+	"footer_rights": "© {year} Nair Entertainment. Бүх эрх хуулиар хамгаалагдсан."
+}
