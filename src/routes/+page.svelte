@@ -153,7 +153,7 @@
 		muted
 		loop
 		playsinline
-		preload="metadata"
+		preload="auto"
 		aria-hidden="true"
 	></video>
 	<div class="s1__overlay" aria-hidden="true"></div>

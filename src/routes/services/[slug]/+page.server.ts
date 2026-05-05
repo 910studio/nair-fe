@@ -1,10 +1,15 @@
 import { error } from '@sveltejs/kit';
+import type { Config } from '@sveltejs/adapter-vercel';
 import { safeFetch } from '$lib/sanity/client';
 import { SERVICE_BY_SLUG_QUERY } from '$lib/sanity/queries';
 import { imgUrl as sanityImg } from '$lib/sanity/img';
 import type { Service as SanityService, SanityImage } from '$lib/sanity/types';
 import type { Service as LocalService, ServiceArtist, Localized } from '$lib/types';
 import type { PageServerLoad } from './$types';
+
+export const config: Config = {
+	isr: { expiration: 300 }
+};
 
 /**
  * Convert a Sanity service doc to the local Service shape the existing
