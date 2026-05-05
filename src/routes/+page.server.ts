@@ -1,5 +1,4 @@
 import type { PageServerLoad } from './$types';
-import type { Config } from '@sveltejs/adapter-vercel';
 import { safeFetch } from '$lib/sanity/client';
 import {
 	HERO_QUERY,
@@ -17,10 +16,6 @@ import type {
 	WhyUsSection,
 	FaqItem
 } from '$lib/sanity/types';
-
-export const config: Config = {
-	isr: { expiration: 300 }
-};
 
 export const load: PageServerLoad = async () => {
 	const [hero, intro, disciplines, collabs, whyUs, faq] = await Promise.all([
