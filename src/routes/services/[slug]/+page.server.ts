@@ -127,15 +127,12 @@ function toLocalShape(s: SanityService): LocalService {
 	};
 }
 
-export const load: PageServerLoad = async ({ params, setHeaders }) => {
+export const load: PageServerLoad = async ({ params }) => {
 	const fromSanity = await safeFetch<SanityService | null>(
 		SERVICE_BY_SLUG_QUERY,
 		{ slug: params.slug },
 		null
 	);
 	if (!fromSanity) error(404, 'Service not found');
-	setHeaders({
-		'cache-control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400'
-	});
 	return { service: toLocalShape(fromSanity) };
 };
