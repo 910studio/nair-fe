@@ -3,11 +3,12 @@
 	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
-		duration?: number;
+		maxDuration?: number;
+		minDuration?: number;
 		onDismiss: () => void;
 	};
 
-	let { duration = 3500, onDismiss }: Props = $props();
+	let { maxDuration = 4500, minDuration = 2200, onDismiss }: Props = $props();
 
 	let leaving = $state(false);
 
@@ -17,9 +18,36 @@
 		setTimeout(onDismiss, 600);
 	}
 
+	function findCriticalAsset(): string | null {
+		const v = document.querySelector<HTMLVideoElement>('video[poster]');
+		if (v?.poster) return v.poster;
+		const fp = document.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
+		if (fp?.src) return fp.src;
+		return null;
+	}
+
 	onMount(() => {
-		const t = setTimeout(dismiss, duration);
-		return () => clearTimeout(t);
+		const t0 = performance.now();
+		const hardStop = setTimeout(dismiss, maxDuration);
+
+		const ready = () => {
+			const elapsed = performance.now() - t0;
+			const remaining = Math.max(0, minDuration - elapsed);
+			setTimeout(dismiss, remaining);
+		};
+
+		const url = findCriticalAsset();
+		if (url) {
+			const img = new Image();
+			img.onload = ready;
+			img.onerror = ready;
+			img.src = url;
+			if (img.complete) ready();
+		} else {
+			setTimeout(dismiss, minDuration);
+		}
+
+		return () => clearTimeout(hardStop);
 	});
 </script>
 

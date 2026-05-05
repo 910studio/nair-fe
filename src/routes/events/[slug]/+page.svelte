@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { t } from '$lib/sanity/i18n';
-	import { urlFor } from '$lib/sanity/image';
+	import { imgUrl } from '$lib/sanity/img';
 
 	let { data } = $props();
 	const locale = $derived(getLocale());
@@ -24,7 +24,7 @@
 <article class="event">
 	{#if event.banner}
 		<div class="event__hero">
-			<img src={urlFor(event.banner).width(1600).height(900).url()} alt={t(event.title, locale)} />
+			<img src={imgUrl(event.banner, { w: 1280, h: 720, fit: 'crop', q: 65 })} alt={t(event.title, locale)} fetchpriority="high" />
 		</div>
 	{/if}
 
@@ -52,7 +52,7 @@
 	{#if event.gallery && event.gallery.length > 0}
 		<section class="event__gallery">
 			{#each event.gallery as img, i (i)}
-				<img src={urlFor(img).width(1200).url()} alt="" loading="lazy" />
+				<img src={imgUrl(img, { w: 960, q: 65 })} alt="" loading="lazy" />
 			{/each}
 		</section>
 	{/if}

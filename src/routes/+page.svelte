@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale, localizeHref } from '$lib/paraglide/runtime';
-	import { fileUrl, t, urlFor, SANITY_CONFIGURED } from '$lib/sanity';
+	import { fileUrl, t, imgUrl, SANITY_CONFIGURED } from '$lib/sanity';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -16,7 +16,7 @@
 	);
 	const heroPosterSrc = $derived(
 		SANITY_CONFIGURED && data.hero?.videoPoster
-			? urlFor(data.hero.videoPoster).width(1920).fit('crop').url()
+			? imgUrl(data.hero.videoPoster, { w: 1280, fit: 'crop', q: 60 })
 			: undefined
 	);
 	const heroTitle = $derived(t(data.hero?.headline, locale) || m.home_hero_title());
@@ -27,7 +27,7 @@
 	const introCtaHref = $derived(data.intro?.ctaHref || '/services');
 	const introImageSrc = $derived(
 		SANITY_CONFIGURED && data.intro?.image
-			? urlFor(data.intro.image).width(2624).fit('max').url()
+			? imgUrl(data.intro.image, { w: 1200, fit: 'max', q: 70 })
 			: '/client-materials/s2-image.png'
 	);
 
@@ -52,7 +52,7 @@
 					label: t(card.title, locale) || `Card ${i + 1}`,
 					image:
 						SANITY_CONFIGURED && card.image
-							? urlFor(card.image).width(880).height(480).fit('crop').url()
+							? imgUrl(card.image, { w: 600, h: 340, fit: 'crop', q: 65 })
 							: null
 				}))
 			: fallbackDisciplines.map((d) => ({
@@ -107,7 +107,7 @@
 			? data.collabs.partners.map((p, i) => ({
 					id: `cms-${i}`,
 					name: p.name || '',
-					logo: p.logo ? urlFor(p.logo).height(96).url() : null
+					logo: p.logo ? imgUrl(p.logo, { w: 240, h: 96, q: 80 }) : null
 				}))
 			: [1, 2, 3, 4, 5, 6, 7, 8].map((i) => ({
 					id: `placeholder-${i}`,
@@ -153,7 +153,7 @@
 		muted
 		loop
 		playsinline
-		preload="auto"
+		preload="metadata"
 		aria-hidden="true"
 	></video>
 	<div class="s1__overlay" aria-hidden="true"></div>

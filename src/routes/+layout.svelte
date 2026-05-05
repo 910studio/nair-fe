@@ -3,6 +3,7 @@
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
+	import { preloadCode, preloadData } from '$app/navigation';
 	import { getLocale, locales, localizeHref } from '$lib/paraglide/runtime';
 	import { t } from '$lib/sanity';
 	import Header from '$lib/components/Header.svelte';
@@ -15,7 +16,27 @@
 	const INTRO_KEY = 'nair:intro-seen';
 	let showIntro = $state(false);
 
+	function primeRouteCache() {
+		// Preload route bundles (JS) for likely next destinations.
+		// Cheap, fire-and-forget — uses idle network during the loading screen.
+		void preloadCode('/services');
+		void preloadCode('/events');
+		void preloadCode('/seasonal');
+
+		// Preload service detail data + code for every seeded service.
+		// Server load is cached by Vercel edge (s-maxage=300), so this is
+		// one Sanity call per unique slug, then free for everyone else.
+		const services = data.services ?? [];
+		for (const s of services) {
+			const href = `/services/${s.slug.current}`;
+			void preloadData(href);
+		}
+	}
+
 	onMount(() => {
+		// Prime the route cache regardless of intro — first nav after load is instant.
+		primeRouteCache();
+
 		if (sessionStorage.getItem(INTRO_KEY)) return;
 		showIntro = true;
 	});

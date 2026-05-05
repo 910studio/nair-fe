@@ -17,7 +17,7 @@ import type {
 	FaqItem
 } from '$lib/sanity/types';
 
-export const load: PageServerLoad = async () => {
+export const load: PageServerLoad = async ({ setHeaders }) => {
 	const [hero, intro, disciplines, collabs, whyUs, faq] = await Promise.all([
 		safeFetch<HeroSection | null>(HERO_QUERY, {}, null),
 		safeFetch<IntroSection | null>(INTRO_QUERY, {}, null),
@@ -26,6 +26,8 @@ export const load: PageServerLoad = async () => {
 		safeFetch<WhyUsSection | null>(WHY_US_QUERY, {}, null),
 		safeFetch<FaqItem[]>(FAQ_QUERY, {}, [])
 	]);
-
+	setHeaders({
+		'cache-control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400'
+	});
 	return { hero, intro, disciplines, collabs, whyUs, faq };
 };

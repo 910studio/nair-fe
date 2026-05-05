@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import { safeFetch } from '$lib/sanity/client';
 import { SERVICE_BY_SLUG_QUERY } from '$lib/sanity/queries';
-import { urlFor } from '$lib/sanity/image';
+import { imgUrl as sanityImg } from '$lib/sanity/img';
 import type { Service as SanityService, SanityImage } from '$lib/sanity/types';
 import type { Service as LocalService, ServiceArtist, Localized } from '$lib/types';
 import type { PageServerLoad } from './$types';
@@ -10,20 +10,15 @@ import type { PageServerLoad } from './$types';
  * Convert a Sanity service doc to the local Service shape the existing
  * <ServiceSmall/Medium/Big/> components already render.
  */
-function imgUrl(img: SanityImage | undefined, w = 1600): string {
-	if (!img) return '';
-	try {
-		return urlFor(img).width(w).url();
-	} catch {
-		return '';
-	}
+function imgUrl(img: SanityImage | undefined, w = 1280): string {
+	return sanityImg(img, { w, q: 65 });
 }
 
 function toLocalShape(s: SanityService): LocalService {
 	const base = {
 		slug: s.slug.current,
 		title: s.title,
-		bannerImage: imgUrl(s.bannerImage, 1920),
+		bannerImage: imgUrl(s.bannerImage, 1280),
 		description: s.description ?? ({ en: '', mn: '' } as Localized)
 	};
 
@@ -42,7 +37,7 @@ function toLocalShape(s: SanityService): LocalService {
 				artistTags: p.artistTags ?? []
 			})),
 			...(s.gallery && s.gallery.length > 0 && {
-				gallery: s.gallery.map((img) => imgUrl(img, 1600)).filter(Boolean)
+				gallery: s.gallery.map((img) => imgUrl(img, 1000)).filter(Boolean)
 			}),
 			...(s.tips?.title &&
 				s.tips?.items?.length && {
@@ -68,7 +63,7 @@ function toLocalShape(s: SanityService): LocalService {
 						options: (sub.options ?? []).map((opt) => ({
 							label: opt.label,
 							title: opt.title,
-							image: imgUrl(opt.image, 600),
+							image: imgUrl(opt.image, 480),
 							programmeItems: (opt.programmeItems ?? []).map((i) => ({
 								label: i.label,
 								active: i.active ?? true
@@ -80,14 +75,14 @@ function toLocalShape(s: SanityService): LocalService {
 							.map<ServiceArtist>((entry) => ({
 								name: entry.artist!.name,
 								role: entry.artist!.role,
-								image: imgUrl(entry.artist!.photo, 400),
+								image: imgUrl(entry.artist!.photo, 320),
 								songs: entry.songs
 							}))
 					}))
 				})
 			})),
 			...(s.gallery && s.gallery.length > 0 && {
-				gallery: s.gallery.map((img) => imgUrl(img, 1600)).filter(Boolean)
+				gallery: s.gallery.map((img) => imgUrl(img, 1000)).filter(Boolean)
 			}),
 			...(s.tips?.title &&
 				s.tips?.items?.length && {
@@ -104,7 +99,7 @@ function toLocalShape(s: SanityService): LocalService {
 		artists: (r.artists ?? []).map<ServiceArtist>((a) => ({
 			name: a.name,
 			role: a.role,
-			image: imgUrl(a.photo, 400)
+			image: imgUrl(a.photo, 320)
 		}))
 	}));
 
@@ -132,12 +127,15 @@ function toLocalShape(s: SanityService): LocalService {
 	};
 }
 
-export const load: PageServerLoad = async ({ params }) => {
+export const load: PageServerLoad = async ({ params, setHeaders }) => {
 	const fromSanity = await safeFetch<SanityService | null>(
 		SERVICE_BY_SLUG_QUERY,
 		{ slug: params.slug },
 		null
 	);
 	if (!fromSanity) error(404, 'Service not found');
+	setHeaders({
+		'cache-control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400'
+	});
 	return { service: toLocalShape(fromSanity) };
 };

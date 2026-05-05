@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { t } from '$lib/sanity/i18n';
-	import { urlFor } from '$lib/sanity/image';
+	import { imgUrl } from '$lib/sanity/img';
 
 	let { data } = $props();
 	const locale = $derived(getLocale());
@@ -23,7 +23,7 @@
 						{#if season.coverImage}
 							<img
 								class="card__img"
-								src={urlFor(season.coverImage).width(800).height(600).url()}
+								src={imgUrl(season.coverImage, { w: 600, h: 450, fit: 'crop', q: 65 })}
 								alt={t(season.name, locale)}
 								loading="lazy"
 							/>
