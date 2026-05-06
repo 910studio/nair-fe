@@ -14,7 +14,7 @@
 	const items = $derived(
 		services.map((s) => ({
 			slug: s.slug.current,
-			label: s.title?.[locale] ?? s.title?.en ?? s.slug.current
+			label: s.title?.[locale] ?? s.title?.mn ?? s.slug.current
 		}))
 	);
 	const otherLocale = $derived<Locale>(getLocale() === 'en' ? 'mn' : 'en');
