@@ -4,6 +4,7 @@
 	import type { ServiceSmall } from '$lib/types';
 	import type { Localized } from '$lib/types';
 	import ServiceBanner from './ServiceBanner.svelte';
+	import ServiceGallery from './ServiceGallery.svelte';
 	import ProgramList from './ProgramList.svelte';
 	import InfoCard from './InfoCard.svelte';
 
@@ -13,11 +14,6 @@
 	}: { service: ServiceSmall; phone?: string } = $props();
 	const t = (v: Localized) => v[getLocale()];
 	const phoneHref = $derived(`tel:${phone.replace(/\s+/g, '')}`);
-
-	// Gallery slider state
-	let galleryIndex = $state(0);
-	let galleryWidth = $state(920);
-	const galleryOffset = $derived(-galleryIndex * (galleryWidth + 32));
 </script>
 
 <ServiceBanner
@@ -140,32 +136,7 @@
 			<!-- ─── s3: gallery slider ─── -->
 			{#if service.gallery?.length}
 				<div class="small__group">
-					<div class="gallery">
-						<div class="gallery__viewport" bind:clientWidth={galleryWidth}>
-							<div
-								class="gallery__track"
-								style="transform: translateX({galleryOffset}px)"
-							>
-								{#each service.gallery as src, i (i)}
-									<div class="gallery__slide">
-										<img class="gallery__img" {src} alt="" loading="lazy" />
-									</div>
-								{/each}
-							</div>
-						</div>
-
-						<div class="gallery__dots">
-							{#each service.gallery as _, i (i)}
-								<button
-									type="button"
-									class="gallery__dot"
-									class:gallery__dot--active={i === galleryIndex}
-									onclick={() => (galleryIndex = i)}
-									aria-label="Go to slide {i + 1}"
-								></button>
-							{/each}
-						</div>
-					</div>
+					<ServiceGallery images={service.gallery} />
 				</div>
 			{/if}
 
@@ -446,65 +417,6 @@
 		flex: none;
 	}
 
-	/* ─── Gallery slider ─── */
-	.gallery {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		gap: 20px;
-	}
-	.gallery__viewport {
-		width: 100%;
-		overflow: hidden;
-	}
-	.gallery__track {
-		display: flex;
-		gap: 32px;
-		transition: transform 0.4s ease;
-		will-change: transform;
-	}
-	.gallery__slide {
-		flex: 0 0 100%;
-		padding: 32px;
-		background: #fff;
-		border-radius: 16px;
-		border: 1px solid rgba(6, 9, 12, 0.08);
-		box-shadow: 0 8px 40px rgba(6, 9, 12, 0.08);
-	}
-	.gallery__img {
-		display: block;
-		width: 100%;
-		height: auto;
-		max-height: 416px;
-		object-fit: cover;
-		border-radius: 8px;
-	}
-	.gallery__dots {
-		display: inline-flex;
-		gap: 8px;
-		padding: 12px;
-		background: #fff;
-		border-radius: 16px;
-		outline: 1px solid rgba(6, 9, 12, 0.04);
-		outline-offset: -1px;
-		box-shadow: 0 8px 40px rgba(6, 9, 12, 0.08);
-	}
-	.gallery__dot {
-		appearance: none;
-		width: 8px;
-		height: 8px;
-		padding: 0;
-		border: 0;
-		border-radius: 8px;
-		background: rgba(6, 9, 12, 0.12);
-		cursor: pointer;
-		transition: width 0.3s ease, background-color 0.3s ease;
-	}
-	.gallery__dot--active {
-		width: 20px;
-		background: #9e1c21;
-	}
-
 	/* ─── Tips ─── */
 	.tips {
 		padding: 24px;
@@ -590,9 +502,6 @@
 			align-items: stretch;
 			gap: 16px;
 			padding: 24px;
-		}
-		.gallery__slide {
-			padding: 16px;
 		}
 		.small__contact-cta {
 			width: 100%;

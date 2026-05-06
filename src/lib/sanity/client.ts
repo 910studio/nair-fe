@@ -19,7 +19,10 @@ export function getSanityClient(): SanityClient | null {
 			projectId: SANITY_PROJECT_ID,
 			dataset: SANITY_DATASET,
 			apiVersion: SANITY_API_VERSION,
-			useCdn: true,
+			// Direct API, not Sanity CDN. Their CDN lags ~1min after a
+			// publish; Vercel's edge already dedupes us via cache-control,
+			// so going direct keeps editor latency short.
+			useCdn: false,
 			perspective: 'published'
 		});
 	}

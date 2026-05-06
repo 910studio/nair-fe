@@ -167,6 +167,23 @@
 		background: transparent;
 		transition: color 0.3s ease;
 	}
+	/* Top-fading black gradient on dark sections (hero) so the header
+	   stays readable without a solid bar. */
+	.site-header[data-bg-mode='dark']::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		bottom: auto;
+		height: calc(100% + 80px);
+		background: linear-gradient(
+			180deg,
+			rgba(6, 9, 12, 0.65) 0%,
+			rgba(6, 9, 12, 0.45) 40%,
+			rgba(6, 9, 12, 0) 100%
+		);
+		pointer-events: none;
+		z-index: -1;
+	}
 	.site-header[data-solid='true'] {
 		background: rgba(255, 255, 255, 0.8);
 		border-bottom: 1px solid rgba(6, 9, 12, 0.04);

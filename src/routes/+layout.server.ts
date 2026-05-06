@@ -9,7 +9,10 @@ export const load: LayoutServerLoad = async ({ setHeaders }) => {
 		safeFetch<Service[]>(ALL_SERVICES_QUERY, {}, [])
 	]);
 	setHeaders({
-		'cache-control': 'public, max-age=60, s-maxage=300, stale-while-revalidate=86400'
+		// Short edge cache so editor changes show within 30s without
+		// thrashing Sanity. Stale-while-revalidate keeps it instant for
+		// repeat visitors while the next request refreshes in background.
+		'cache-control': 'public, max-age=0, s-maxage=30, stale-while-revalidate=86400'
 	});
 	return { siteSettings, services };
 };
