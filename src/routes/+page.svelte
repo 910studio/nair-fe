@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, localizeHref } from '$lib/paraglide/runtime';
+	import { getLocale } from '$lib/paraglide/runtime';
 	import { fileUrl, t, imgUrl, SANITY_CONFIGURED } from '$lib/sanity';
+	import { drawer } from '$lib/stores/drawer.svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -24,7 +25,6 @@
 	// ─── Intro (s2) ───
 	const introSegments = $derived(data.intro?.bodySegments ?? null);
 	const introCtaLabel = $derived(t(data.intro?.ctaLabel, locale) || m.home_intro_cta());
-	const introCtaHref = $derived(data.intro?.ctaHref || '/services');
 	const introImageSrc = $derived(
 		SANITY_CONFIGURED && data.intro?.image
 			? imgUrl(data.intro.image, { w: 1200, fit: 'max', q: 70 })
@@ -172,7 +172,13 @@
 				{@html m.home_intro_body()}
 			{/if}
 		</p>
-		<a class="s2__cta" href={localizeHref(introCtaHref as `/${string}`)}>
+		<button
+			type="button"
+			class="s2__cta"
+			onclick={() => (drawer.open = true)}
+			aria-haspopup="dialog"
+			aria-expanded={drawer.open}
+		>
 			<span>{introCtaLabel}</span>
 			<svg
 				class="s2__cta-arrow"
@@ -187,7 +193,7 @@
 				<line x1="3" y1="12" x2="21" y2="12" />
 				<polyline points="14 6 21 12 14 18" />
 			</svg>
-		</a>
+		</button>
 	</div>
 	<img class="s2__media" src={introImageSrc} alt="" loading="lazy" />
 </section>
@@ -475,6 +481,9 @@
 		font-style: normal;
 	}
 	.s2__cta {
+		appearance: none;
+		border: 0;
+		font: inherit;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;

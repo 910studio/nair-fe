@@ -5,6 +5,7 @@
 	import { getLocale, localizeHref, setLocale, type Locale } from '$lib/paraglide/runtime';
 	import type { Service as SanityService } from '$lib/sanity/types';
 	import ServicesDrawer from './ServicesDrawer.svelte';
+	import { drawer } from '$lib/stores/drawer.svelte';
 
 	let { services = [] }: { services?: SanityService[] } = $props();
 
@@ -16,7 +17,6 @@
 
 	let bgMode = $state<'light' | 'dark'>('light');
 	let headerEl: HTMLElement | undefined = $state();
-	let drawerOpen = $state(false);
 
 	function update() {
 		if (typeof window === 'undefined' || !headerEl) return;
@@ -103,9 +103,9 @@
 		<button
 			type="button"
 			class="btn btn--primary actions__desktop"
-			onclick={() => (drawerOpen = true)}
+			onclick={() => (drawer.open = true)}
 			aria-haspopup="dialog"
-			aria-expanded={drawerOpen}
+			aria-expanded={drawer.open}
 		>
 			<svg
 				class="icon"
@@ -127,9 +127,9 @@
 		<button
 			type="button"
 			class="btn btn--secondary actions__mobile"
-			onclick={() => (drawerOpen = true)}
+			onclick={() => (drawer.open = true)}
 			aria-haspopup="dialog"
-			aria-expanded={drawerOpen}
+			aria-expanded={drawer.open}
 			aria-label={m.header_cta_services()}
 		>
 			<svg
@@ -150,7 +150,7 @@
 	</div>
 </header>
 
-<ServicesDrawer open={drawerOpen} onClose={() => (drawerOpen = false)} {services} />
+<ServicesDrawer open={drawer.open} onClose={() => drawer.close()} {services} />
 
 <style>
 	.site-header {
