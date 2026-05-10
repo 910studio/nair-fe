@@ -94,6 +94,14 @@
 
 <Seo {seo} {locale} {jsonLd} />
 
+<a class="discipline__back" href="/" onclick={goBack} aria-label={m.common_back()}>
+	<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+		stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+		<polyline points="15 18 9 12 15 6" />
+	</svg>
+	<span>{m.common_back()}</span>
+</a>
+
 <article class="discipline" data-bg="dark">
 	<div class="discipline__hero">
 		<img
@@ -104,13 +112,6 @@
 		/>
 		<div class="discipline__scrim" aria-hidden="true"></div>
 		<div class="discipline__cap">
-			<a class="discipline__back" href="/" onclick={goBack} aria-label={m.common_back()}>
-				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-					stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-					<polyline points="15 18 9 12 15 6" />
-				</svg>
-				<span>{m.common_back()}</span>
-			</a>
 			<header class="discipline__head">
 				{#if tagline}
 					<span class="discipline__tagline">{tagline}</span>
