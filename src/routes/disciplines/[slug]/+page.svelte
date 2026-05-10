@@ -3,6 +3,8 @@
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { t, imgUrl, SANITY_CONFIGURED } from '$lib/sanity';
 	import { disciplineTransition } from '$lib/stores/disciplineTransition.svelte';
+	import Seo from '$lib/components/Seo.svelte';
+	import { SITE, buildSeo, clampDescription } from '$lib/seo';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -41,7 +43,56 @@
 		if (!SANITY_CONFIGURED || !data.cms?.gallery?.length) return [] as string[];
 		return data.cms.gallery.map((img) => imgUrl(img, { w: 1600, fit: 'max', q: 75 }));
 	});
+
+	// Per-page SEO + GEO. Description prefers CMS body, falls back to tagline.
+	const seoImage = $derived.by(() => {
+		if (SANITY_CONFIGURED && data.cms?.heroImage) {
+			return imgUrl(data.cms.heroImage, { w: 1200, h: 630, fit: 'crop', q: 80 });
+		}
+		if (SANITY_CONFIGURED && data.cms?.image) {
+			return imgUrl(data.cms.image, { w: 1200, h: 630, fit: 'crop', q: 80 });
+		}
+		return `/client-materials/disciplines/${data.slug}.png`;
+	});
+
+	const seo = $derived(
+		buildSeo({
+			title,
+			description: clampDescription(description || tagline),
+			image: seoImage,
+			pathname: `/disciplines/${data.slug}`,
+			locale,
+			type: 'article'
+		})
+	);
+
+	// CreativeWork JSON-LD for rich results + LLM ingestion.
+	const jsonLd = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'CreativeWork',
+		name: title,
+		...(description ? { description: clampDescription(description, 500) } : {}),
+		image: seoImage,
+		url: seo.canonical,
+		inLanguage: locale,
+		isPartOf: {
+			'@type': 'WebSite',
+			name: SITE.name,
+			url: SITE.origin
+		},
+		about: {
+			'@type': 'Thing',
+			name: locale === 'mn' ? 'Уламжлалт монгол урлаг' : 'Traditional Mongolian performing arts'
+		},
+		creator: {
+			'@type': 'PerformingGroup',
+			name: SITE.name,
+			url: SITE.origin
+		}
+	});
 </script>
+
+<Seo {seo} {locale} {jsonLd} />
 
 <article class="discipline" data-bg="dark">
 	<div class="discipline__hero">

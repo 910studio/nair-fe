@@ -8,6 +8,7 @@
 	import { t } from '$lib/sanity';
 	import Header from '$lib/components/Header.svelte';
 	import LoadingScreen from '$lib/components/LoadingScreen.svelte';
+	import { SITE } from '$lib/seo';
 	import type { LayoutData } from './$types';
 	import './layout.css';
 
@@ -59,6 +60,37 @@
 	}
 
 	const locale = $derived(getLocale());
+
+	// Site-wide Organization JSON-LD. Per-page meta (title, description,
+	// canonical, og/twitter, page-specific JSON-LD) lives in each route.
+	const sameAs = $derived(
+		(data.siteSettings?.socials ?? [])
+			.map((s) => s.url)
+			.filter((u): u is string => typeof u === 'string' && u.length > 0)
+	);
+
+	const organizationJsonLd = $derived({
+		'@context': 'https://schema.org',
+		'@type': 'PerformingGroup',
+		name: SITE.name,
+		alternateName: ['Найр Энтертайнмент', 'Nair', 'Nair Ent'],
+		url: SITE.origin,
+		logo: `${SITE.origin}${SITE.logo}`,
+		description:
+			locale === 'mn'
+				? 'Уламжлалт монгол урлагийн мэргэжлийн бүлэг — арга хэмжээ, найр, цэнгүүн.'
+				: 'Mongolian traditional performing arts collective — events, weddings and ceremonies.',
+		address: {
+			'@type': 'PostalAddress',
+			addressCountry: 'MN',
+			addressLocality: 'Ulaanbaatar'
+		},
+		...(data.siteSettings?.phone
+			? { telephone: data.siteSettings.phone.replace(/\s+/g, '') }
+			: {}),
+		...(sameAs.length ? { sameAs } : {})
+	});
+
 	const phone = $derived(data.siteSettings?.phone ?? '76004455');
 	const phoneHref = $derived(`tel:${phone.replace(/\s+/g, '')}`);
 
@@ -76,7 +108,10 @@
 	);
 </script>
 
-<svelte:head><link rel="icon" type="image/svg+xml" href="/client-materials/Logo/symbol.svg" /></svelte:head>
+<svelte:head>
+	<link rel="icon" type="image/svg+xml" href="/client-materials/Logo/symbol.svg" />
+	{@html `<script type="application/ld+json">${JSON.stringify(organizationJsonLd)}</` + `script>`}
+</svelte:head>
 
 {#if showIntro}
 	<LoadingScreen onDismiss={dismissIntro} />

@@ -1,3 +1,25 @@
-# allow crawling everything by default
+# Allow all crawlers (search + AI)
 User-agent: *
-Disallow:
+Allow: /
+Disallow: /api/
+
+# Explicit opt-in for LLM crawlers (some only respect named entries).
+User-agent: GPTBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+User-agent: anthropic-ai
+Allow: /
+
+Sitemap: https://nair.mn/sitemap.xml

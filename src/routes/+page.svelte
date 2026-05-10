@@ -5,6 +5,9 @@
 	import { drawer } from '$lib/stores/drawer.svelte';
 	import { disciplineTransition } from '$lib/stores/disciplineTransition.svelte';
 	import { onMount } from 'svelte';
+	import LogoBelt from '$lib/components/LogoBelt.svelte';
+	import Seo from '$lib/components/Seo.svelte';
+	import { buildSeo, clampDescription } from '$lib/seo';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -191,18 +194,6 @@
 				}))
 	);
 
-	// 3-row split for mobile marquee (alternating direction per row)
-	const collabRows = $derived.by(() => {
-		const n = collabPartners.length;
-		const a = Math.ceil(n / 3);
-		const b = Math.ceil((2 * n) / 3);
-		return [
-			collabPartners.slice(0, a),
-			collabPartners.slice(a, b),
-			collabPartners.slice(b)
-		];
-	});
-
 	// ─── FAQ (s5) ───
 	const faqTitle = $derived(m.home_faq_title());
 	const fallbackFaqs = $derived(
@@ -216,7 +207,55 @@
 			? data.faq.map((f) => ({ q: t(f.question, locale), a: t(f.answer, locale) }))
 			: fallbackFaqs
 	);
+
+	// ─── SEO + GEO ───
+	const introBodyText = $derived(
+		introSegments?.length
+			? introSegments.map((seg) => t(seg.text, locale)).join(' ')
+			: undefined
+	);
+
+	const homeSeo = $derived(
+		buildSeo({
+			title: heroTitle,
+			description: clampDescription(introBodyText),
+			image: heroPosterSrc ?? introImageSrc,
+			pathname: '/',
+			locale
+		})
+	);
+
+	const homeJsonLd = $derived([
+		{
+			'@context': 'https://schema.org',
+			'@type': 'WebSite',
+			name: 'Nair Entertainment',
+			url: 'https://nair.mn',
+			inLanguage: locale,
+			potentialAction: {
+				'@type': 'SearchAction',
+				target: 'https://nair.mn/?q={search_term_string}',
+				'query-input': 'required name=search_term_string'
+			}
+		},
+		// FAQ schema lifts answers into Google rich results + LLM ingestion.
+		...(faqs.length
+			? [
+					{
+						'@context': 'https://schema.org',
+						'@type': 'FAQPage',
+						mainEntity: faqs.map((f) => ({
+							'@type': 'Question',
+							name: f.q,
+							acceptedAnswer: { '@type': 'Answer', text: f.a }
+						}))
+					}
+				]
+			: [])
+	]);
 </script>
+
+<Seo seo={homeSeo} {locale} jsonLd={homeJsonLd} />
 
 <!-- SECTION 1 ─ hero · video bg · dark gradient · title bottom-left -->
 <section class="s1" data-bg="dark">
@@ -311,64 +350,7 @@
 </section>
 
 <!-- SECTION 3b ─ collab belt · radial-bottom dark · ∞ marquee -->
-<section class="s3b" data-bg="dark">
-	<p class="s3b__title">{collabsTitle}</p>
-	<div class="s3b__belt s3b__belt--desktop" aria-label="collab marquee">
-		<div class="s3b__belt-track">
-			{#each collabPartners as p (`a-${p.id}`)}
-				<div class="s3b__collab">
-					{#if p.logo}
-						<img class="s3b__logo-img" src={p.logo} alt={p.name} loading="lazy" />
-					{:else}
-						<span class="s3b__symbol" aria-hidden="true"></span>
-						<span class="s3b__logo">{p.name}</span>
-					{/if}
-				</div>
-			{/each}
-			{#each collabPartners as p (`b-${p.id}`)}
-				<div class="s3b__collab" aria-hidden="true">
-					{#if p.logo}
-						<img class="s3b__logo-img" src={p.logo} alt="" loading="lazy" />
-					{:else}
-						<span class="s3b__symbol"></span>
-						<span class="s3b__logo">{p.name}</span>
-					{/if}
-				</div>
-			{/each}
-		</div>
-	</div>
-
-	<div class="s3b__rows" aria-hidden="true">
-		{#each collabRows as row, rowIdx (rowIdx)}
-			{#if row.length}
-				<div class="s3b__belt" data-dir={rowIdx % 2 === 0 ? 'l' : 'r'}>
-					<div class="s3b__belt-track">
-						{#each row as p (`m-${rowIdx}-a-${p.id}`)}
-							<div class="s3b__collab">
-								{#if p.logo}
-									<img class="s3b__logo-img" src={p.logo} alt={p.name} loading="lazy" />
-								{:else}
-									<span class="s3b__symbol"></span>
-									<span class="s3b__logo">{p.name}</span>
-								{/if}
-							</div>
-						{/each}
-						{#each row as p (`m-${rowIdx}-b-${p.id}`)}
-							<div class="s3b__collab">
-								{#if p.logo}
-									<img class="s3b__logo-img" src={p.logo} alt="" loading="lazy" />
-								{:else}
-									<span class="s3b__symbol"></span>
-									<span class="s3b__logo">{p.name}</span>
-								{/if}
-							</div>
-						{/each}
-					</div>
-				</div>
-			{/if}
-		{/each}
-	</div>
-</section>
+<LogoBelt title={collabsTitle} partners={collabPartners} />
 
 <!-- SECTION 4 ─ why us · centered intro · pill-cluster card -->
 <section class="s4" data-bg="light">
@@ -742,95 +724,6 @@
 		letter-spacing: 0.24px;
 	}
 
-	/* ─── Section 3b — collab belt ─── */
-	.s3b {
-		position: relative;
-		padding: 60px 0 120px;
-		background: radial-gradient(
-			ellipse 100% 49.87% at 50.13% 100%,
-			#121518 0%,
-			#06090c 100%
-		);
-		border-bottom: 1px solid rgba(255, 255, 255, 0.04);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		gap: 48px;
-		overflow: hidden;
-	}
-	.s3b__title {
-		margin: 0;
-		text-align: center;
-		color: rgba(255, 255, 255, 0.48);
-		font-size: 20px;
-		font-weight: 500;
-		line-height: 28px;
-		letter-spacing: 0.4px;
-	}
-	.s3b__belt {
-		width: 100%;
-		overflow: hidden;
-		mask-image: linear-gradient(
-			to right,
-			transparent 0,
-			#000 8%,
-			#000 92%,
-			transparent 100%
-		);
-	}
-	.s3b__belt-track {
-		display: flex;
-		width: max-content;
-		animation: s3b-scroll 40s linear infinite;
-	}
-	.s3b__belt:hover .s3b__belt-track {
-		animation-play-state: paused;
-	}
-	.s3b__belt[data-dir='r'] .s3b__belt-track {
-		animation-direction: reverse;
-	}
-	@keyframes s3b-scroll {
-		to {
-			transform: translateX(-50%);
-		}
-	}
-	.s3b__rows {
-		display: none;
-	}
-	.s3b__collab {
-		display: inline-flex;
-		align-items: center;
-		gap: 10px;
-		margin-right: 48px;
-		flex: none;
-	}
-	.s3b__symbol {
-		width: 40px;
-		height: 40px;
-		flex: none;
-		border: 1px dashed rgba(255, 255, 255, 0.45);
-		border-radius: 999px;
-	}
-	.s3b__logo {
-		width: 160px;
-		height: 48px;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border: 1px dashed rgba(255, 255, 255, 0.45);
-		font-family: ui-monospace, 'SF Mono', monospace;
-		font-size: 11px;
-		letter-spacing: 0.08em;
-		color: rgba(255, 255, 255, 0.55);
-	}
-	.s3b__logo-img {
-		height: 48px;
-		width: auto;
-		display: block;
-		opacity: 0.84;
-	}
-
 	/* ─── Section 4 — Why Us ─── */
 	.s4 {
 		padding: 100px 64px;
@@ -1166,15 +1059,6 @@
 			font-size: 16px;
 			line-height: 24px;
 			letter-spacing: 0.32px;
-		}
-		.s3b__belt--desktop {
-			display: none;
-		}
-		.s3b__rows {
-			display: flex;
-			flex-direction: column;
-			gap: 40px;
-			width: 100%;
 		}
 		.s5 {
 			padding: 64px 20px;
