@@ -182,19 +182,23 @@
 		gap: 32px;
 	}
 	.discipline__back {
+		position: fixed;
+		top: 32px;
+		left: 64px;
+		z-index: 60;
 		display: inline-flex;
 		align-items: center;
 		gap: 8px;
 		padding: 10px 16px 10px 12px;
-		background: rgba(255, 255, 255, 0.08);
+		background: rgba(255, 255, 255, 0.16);
 		border-radius: 999px;
 		color: #fff;
 		text-decoration: none;
 		font-size: 14px;
 		font-weight: 500;
 		letter-spacing: 0.28px;
-		backdrop-filter: blur(12px);
-		-webkit-backdrop-filter: blur(12px);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
 		transition: background-color 0.2s ease;
 	}
 	.discipline__back:hover {
@@ -274,6 +278,10 @@
 	}
 
 	@media (max-width: 768px) {
+		.discipline__back {
+			top: 20px;
+			left: 20px;
+		}
 		.discipline__cap {
 			padding: 96px 20px 48px;
 		}
