@@ -50,6 +50,14 @@ export const service = defineType({
 			initialValue: 100,
 			hidden: true
 		}),
+		// Managed by @sanity/orderable-document-list. Don't edit by hand.
+		defineField({
+			name: 'orderRank',
+			title: 'Order rank',
+			type: 'string',
+			hidden: true,
+			readOnly: true
+		}),
 		defineField({
 			name: 'layout',
 			title: 'Загвар',
