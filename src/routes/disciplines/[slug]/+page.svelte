@@ -178,13 +178,13 @@
 		padding: 112px 64px 96px;
 		display: flex;
 		flex-direction: column;
-		justify-content: space-between;
+		justify-content: flex-end;
 		align-items: flex-start;
 		gap: 32px;
 	}
 	.discipline__back {
 		position: fixed;
-		top: 32px;
+		top: 96px;
 		left: 64px;
 		z-index: 60;
 		display: inline-flex;
@@ -280,7 +280,7 @@
 
 	@media (max-width: 768px) {
 		.discipline__back {
-			top: 20px;
+			top: 88px;
 			left: 20px;
 		}
 		.discipline__cap {
