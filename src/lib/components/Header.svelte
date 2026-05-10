@@ -7,7 +7,15 @@
 	import ServicesDrawer from './ServicesDrawer.svelte';
 	import { drawer } from '$lib/stores/drawer.svelte';
 
-	let { services = [] }: { services?: SanityService[] } = $props();
+	let {
+		services = [],
+		phone,
+		socials = []
+	}: {
+		services?: SanityService[];
+		phone?: string;
+		socials?: { platform: string; url: string }[];
+	} = $props();
 
 	const otherLocale = $derived<Locale>(getLocale() === 'en' ? 'mn' : 'en');
 	const otherLabel = $derived(otherLocale === 'mn' ? 'MN' : 'EN');
@@ -144,7 +152,7 @@
 	</div>
 </header>
 
-<ServicesDrawer open={drawer.open} onClose={() => drawer.close()} {services} />
+<ServicesDrawer open={drawer.open} onClose={() => drawer.close()} {services} {phone} {socials} />
 
 <style>
 	.site-header {

@@ -117,7 +117,11 @@
 	<LoadingScreen onDismiss={dismissIntro} />
 {/if}
 
-<Header services={data.services ?? []} />
+<Header
+	services={data.services ?? []}
+	phone={data.siteSettings?.phone}
+	socials={data.siteSettings?.socials ?? []}
+/>
 
 <main>
 	{@render children()}

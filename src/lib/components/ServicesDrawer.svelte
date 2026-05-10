@@ -7,8 +7,10 @@
 		open: boolean;
 		onClose: () => void;
 		services?: SanityService[];
+		phone?: string;
+		socials?: { platform: string; url: string }[];
 	};
-	let { open, onClose, services = [] }: Props = $props();
+	let { open, onClose, services = [], phone, socials = [] }: Props = $props();
 
 	const locale = $derived(getLocale());
 	const items = $derived(
@@ -19,6 +21,13 @@
 	);
 	const otherLocale = $derived<Locale>(getLocale() === 'en' ? 'mn' : 'en');
 	const otherLabel = $derived(otherLocale === 'mn' ? 'MN' : 'EN');
+
+	const phoneText = $derived(phone || '76004455');
+	const phoneHref = $derived(`tel:${phoneText.replace(/\s+/g, '')}`);
+	const socialOf = (platform: string) => socials.find((s) => s.platform === platform)?.url;
+	const fbUrl = $derived(socialOf('facebook'));
+	const igUrl = $derived(socialOf('instagram'));
+	const ytUrl = $derived(socialOf('youtube'));
 
 	$effect(() => {
 		if (open) {
@@ -49,7 +58,7 @@
 		tabindex={open ? 0 : -1}
 	></button>
 
-	<aside class="drawer" aria-modal="true" aria-hidden={!open}>
+	<aside class="drawer" role="dialog" aria-modal="true" aria-hidden={!open}>
 		<header class="drawer__head">
 			<a class="drawer__brand" href={localizeHref('/')} onclick={onClose}>
 				<img src="/client-materials/Logo/logo-dark.svg" alt="Nair Entertainment" />
@@ -98,59 +107,78 @@
 		</nav>
 
 		<footer class="drawer__foot">
-			<a class="drawer__phone" href="tel:99994455" tabindex={open ? 0 : -1}>
-				<svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+			<a class="drawer__phone" href={phoneHref} tabindex={open ? 0 : -1}>
+				<svg
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
 					<path
-						d="M2.003 5.884L10 9.882l7.997-3.998A2 2 0 0016 4H4a2 2 0 00-1.997 1.884z"
-					/>
-					<path
-						d="M18 8.118l-8 4-8-4V14a2 2 0 002 2h12a2 2 0 002-2V8.118z"
-						style="display:none"
-					/>
-					<path
-						d="M3.654 1.328a.678.678 0 00-1.015-.063L1.605 2.3c-.483.484-.661 1.169-.45 1.77a17.6 17.6 0 004.168 6.608 17.6 17.6 0 006.608 4.168c.601.211 1.286.033 1.77-.45l1.034-1.034a.678.678 0 00-.063-1.015l-2.307-1.794a.678.678 0 00-.58-.122l-2.19.547a1.745 1.745 0 01-1.657-.459L5.482 8.062a1.745 1.745 0 01-.46-1.657l.548-2.19a.678.678 0 00-.122-.58L3.654 1.328z"
+						d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"
 					/>
 				</svg>
-				<span>99994455</span>
+				<span>{phoneText}</span>
 			</a>
 
 			<div class="drawer__socials">
-				<a
-					class="drawer__social"
-					href="#"
-					aria-label="Facebook"
-					tabindex={open ? 0 : -1}
-				>
-					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-						<path
-							d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"
-						/>
-					</svg>
-				</a>
-				<a
-					class="drawer__social"
-					href="#"
-					aria-label="Instagram"
-					tabindex={open ? 0 : -1}
-				>
-					<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-						<rect x="3" y="3" width="18" height="18" rx="5" />
-						<circle cx="12" cy="12" r="4" />
-						<circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-					</svg>
-				</a>
-				<a
-					class="drawer__social"
-					href="#"
-					aria-label="YouTube"
-					tabindex={open ? 0 : -1}
-				>
-					<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-						<path
-							d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1c.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"
-						/>
-					</svg>
-				</a>
+				{#if fbUrl}
+					<a
+						class="drawer__social"
+						href={fbUrl}
+						target="_blank"
+						rel="noopener"
+						aria-label="Facebook"
+						tabindex={open ? 0 : -1}
+					>
+						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path
+								d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"
+							/>
+						</svg>
+					</a>
+				{/if}
+				{#if igUrl}
+					<a
+						class="drawer__social"
+						href={igUrl}
+						target="_blank"
+						rel="noopener"
+						aria-label="Instagram"
+						tabindex={open ? 0 : -1}
+					>
+						<svg
+							viewBox="0 0 24 24"
+							fill="none"
+							stroke="currentColor"
+							stroke-width="2"
+							aria-hidden="true"
+						>
+							<rect x="3" y="3" width="18" height="18" rx="5" />
+							<circle cx="12" cy="12" r="4" />
+							<circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+						</svg>
+					</a>
+				{/if}
+				{#if ytUrl}
+					<a
+						class="drawer__social"
+						href={ytUrl}
+						target="_blank"
+						rel="noopener"
+						aria-label="YouTube"
+						tabindex={open ? 0 : -1}
+					>
+						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path
+								d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1c.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"
+							/>
+						</svg>
+					</a>
+				{/if}
 			</div>
 		</footer>
 	</aside>
