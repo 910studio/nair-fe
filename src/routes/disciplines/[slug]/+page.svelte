@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { t, imgUrl, SANITY_CONFIGURED } from '$lib/sanity';
 	import { disciplineTransition } from '$lib/stores/disciplineTransition.svelte';
@@ -52,12 +53,12 @@
 		/>
 		<div class="discipline__scrim" aria-hidden="true"></div>
 		<div class="discipline__cap">
-			<a class="discipline__back" href="/" onclick={goBack} aria-label="Back">
+			<a class="discipline__back" href="/" onclick={goBack} aria-label={m.common_back()}>
 				<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
 					stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
 					<polyline points="15 18 9 12 15 6" />
 				</svg>
-				<span>Back</span>
+				<span>{m.common_back()}</span>
 			</a>
 			<header class="discipline__head">
 				{#if tagline}
