@@ -1,8 +1,10 @@
 <script lang="ts">
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
-	import { fileUrl, t, imgUrl, SANITY_CONFIGURED } from '$lib/sanity';
+	import { fileUrl, t, imgUrl, slugify, SANITY_CONFIGURED } from '$lib/sanity';
 	import { drawer } from '$lib/stores/drawer.svelte';
+	import { disciplineTransition } from '$lib/stores/disciplineTransition.svelte';
+	import { onMount } from 'svelte';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -44,18 +46,23 @@
 		{ id: 'undesnii-khugjim', label: m.home_discipline_undesnii_khugjim }
 	];
 
-	type DisciplineCard = { label: string; image: string | null };
+	type DisciplineCard = { slug: string; label: string; image: string | null };
 
 	const disciplineCards = $derived<DisciplineCard[]>(
 		data.disciplines?.cards?.length
-			? data.disciplines.cards.map((card, i) => ({
-					label: t(card.title, locale) || `Card ${i + 1}`,
-					image:
-						SANITY_CONFIGURED && card.image
-							? imgUrl(card.image, { w: 600, h: 340, fit: 'crop', q: 65 })
-							: null
-				}))
+			? data.disciplines.cards.map((card, i) => {
+					const enLabel = card.title?.en || card.title?.mn || `card-${i}`;
+					return {
+						slug: card.slug || slugify(enLabel) || `card-${i}`,
+						label: t(card.title, locale) || `Card ${i + 1}`,
+						image:
+							SANITY_CONFIGURED && card.image
+								? imgUrl(card.image, { w: 600, h: 340, fit: 'crop', q: 65 })
+								: null
+					};
+				})
 			: fallbackDisciplines.map((d) => ({
+					slug: d.id,
 					label: d.label(),
 					image: `/client-materials/disciplines/${d.id}.png`
 				}))
@@ -63,12 +70,80 @@
 
 	const disciplineTitle = $derived(t(data.disciplines?.title, locale) || m.home_disciplines_title());
 
-	// 4 / 3 / 2 layout split
+	// 4 / 3 / 2 layout split — preserved as visual hierarchy across shelves
 	const disciplineRows = $derived([
 		disciplineCards.slice(0, 4),
 		disciplineCards.slice(4, 7),
 		disciplineCards.slice(7)
 	]);
+
+	// The card whose image should hold `view-transition-name` for the morph.
+	// Forward: set in onclick. Back: pre-set on detail page so the matching card
+	// here is named when the post-nav snapshot is taken. Cleared after settling.
+	const activeSlug = $derived(disciplineTransition.slug);
+
+	function activateCard(e: MouseEvent, slug: string) {
+		disciplineTransition.arm(slug);
+		// Belt-and-braces: also stamp the DOM directly in case Svelte hasn't flushed
+		// before the link click triggers navigation snapshotting.
+		const card = e.currentTarget as HTMLAnchorElement;
+		const img = card.querySelector<HTMLElement>('.s3__card-img');
+		if (img) img.style.viewTransitionName = `discipline-${slug}`;
+	}
+
+	onMount(() => {
+		// Clear the armed slug once any incoming morph has had time to play.
+		const timer = setTimeout(() => disciplineTransition.disarm(), 700);
+		return () => clearTimeout(timer);
+	});
+
+	// Apple-Music-style image pan: images lag behind the shelf as it scrolls.
+	function pan(node: HTMLDivElement) {
+		let raf = 0;
+		let cards: HTMLElement[] = [];
+
+		const collect = () => {
+			cards = Array.from(node.querySelectorAll<HTMLElement>('.s3__card'));
+		};
+
+		const update = () => {
+			const viewportCenter = node.scrollLeft + node.clientWidth / 2;
+			for (const card of cards) {
+				const cardCenter = card.offsetLeft + card.offsetWidth / 2;
+				const offset = (cardCenter - viewportCenter) / node.clientWidth;
+				const clamped = Math.max(-1, Math.min(1, offset));
+				const px = -clamped * (card.offsetWidth * 0.08);
+				card.style.setProperty('--pan', `${px}px`);
+			}
+		};
+
+		const onScroll = () => {
+			cancelAnimationFrame(raf);
+			raf = requestAnimationFrame(update);
+		};
+
+		node.addEventListener('scroll', onScroll, { passive: true });
+
+		const ro = new ResizeObserver(() => {
+			collect();
+			update();
+		});
+		ro.observe(node);
+
+		collect();
+		requestAnimationFrame(() => {
+			collect();
+			update();
+		});
+
+		return {
+			destroy() {
+				cancelAnimationFrame(raf);
+				node.removeEventListener('scroll', onScroll);
+				ro.disconnect();
+			}
+		};
+	}
 
 	// ─── Why us (s4) ───
 	const whyBadge = $derived(t(data.whyUs?.badge, locale) || m.home_why_badge());
@@ -198,22 +273,37 @@
 	<img class="s2__media" src={introImageSrc} alt="" loading="lazy" />
 </section>
 
-<!-- SECTION 3 ─ disciplines · radial-dark gradient · 4-3-2 bento -->
+<!-- SECTION 3 ─ disciplines · radial-dark gradient · apple-music-style pan shelves -->
 <section class="s3" data-bg="dark">
 	<h2 class="s3__title">{disciplineTitle}</h2>
-	<div class="s3__grid">
+	<div class="s3__shelves">
 		{#each disciplineRows as row, rowIdx (rowIdx)}
 			{#if row.length}
-				<div class="s3__row">
+				<div class="s3__shelf" data-row={rowIdx} use:pan>
+					<div class="s3__shelf-edge" aria-hidden="true"></div>
 					{#each row as card, i (`${rowIdx}-${i}`)}
-						<article
+						<a
 							class="s3__card"
-							style={card.image ? `background-image: url('${card.image}')` : ''}
+							href="/disciplines/{card.slug}"
+							onclick={(e) => activateCard(e, card.slug)}
+							aria-label={card.label}
 						>
+							{#if card.image}
+								<img
+									class="s3__card-img"
+									src={card.image}
+									alt=""
+									loading="lazy"
+									style:view-transition-name={activeSlug === card.slug
+										? `discipline-${card.slug}`
+										: null}
+								/>
+							{/if}
 							<span class="s3__card-overlay" aria-hidden="true"></span>
 							<h3 class="s3__card-title">{card.label}</h3>
-						</article>
+						</a>
 					{/each}
+					<div class="s3__shelf-edge" aria-hidden="true"></div>
 				</div>
 			{/if}
 		{/each}
@@ -443,10 +533,10 @@
 		z-index: 2;
 		margin: 0;
 		color: #fff;
-		font-size: 80px;
-		line-height: 100px;
+		font-size: 64px;
+		line-height: 80px;
 		font-weight: 500;
-		letter-spacing: 0.8px;
+		letter-spacing: 0.64px;
 		white-space: pre-line;
 		word-wrap: break-word;
 	}
@@ -525,9 +615,9 @@
 		border: 2px solid rgba(38, 53, 84, 0.08);
 	}
 
-	/* ─── Section 3 — Disciplines ─── */
+	/* ─── Section 3 — Disciplines · Apple-Music pan shelves ─── */
 	.s3 {
-		padding: 100px 64px;
+		padding: 100px 0;
 		background: radial-gradient(
 			ellipse 100% 49.87% at 50% 0%,
 			#121518 0%,
@@ -536,10 +626,11 @@
 		display: flex;
 		flex-direction: column;
 		align-items: center;
-		gap: 80px;
+		gap: 64px;
 	}
 	.s3__title {
 		margin: 0;
+		padding: 0 64px;
 		max-width: 800px;
 		text-align: center;
 		color: #fff;
@@ -548,20 +639,52 @@
 		line-height: 48px;
 		letter-spacing: 0.4px;
 	}
-	.s3__grid {
+	.s3__shelves {
 		width: 100%;
 		display: flex;
 		flex-direction: column;
 		gap: 24px;
 	}
-	.s3__row {
+	.s3__shelf {
 		display: flex;
 		gap: 24px;
+		overflow-x: auto;
+		scroll-snap-type: x mandatory;
+		scroll-padding-inline: 64px;
+		scrollbar-width: none;
+		-ms-overflow-style: none;
+		-webkit-overflow-scrolling: touch;
+		touch-action: pan-x;
+		overscroll-behavior-x: contain;
+	}
+	.s3__shelf::-webkit-scrollbar {
+		display: none;
+	}
+	.s3__shelf-edge {
+		flex: 0 0 40px;
+	}
+	.s3__shelf[data-row='0'] .s3__card {
+		width: clamp(280px, 28vw, 360px);
+		height: 220px;
+	}
+	.s3__shelf[data-row='1'] .s3__card {
+		width: clamp(360px, 36vw, 480px);
+		height: 280px;
+	}
+	.s3__shelf[data-row='2'] .s3__card {
+		width: clamp(520px, 56vw, 760px);
+		height: 360px;
 	}
 	.s3__card {
+		appearance: none;
+		border: 0;
+		font: inherit;
+		color: inherit;
+		text-align: left;
+		text-decoration: none;
+		cursor: pointer;
 		position: relative;
-		flex: 1 1 0;
-		height: 240px;
+		flex: 0 0 auto;
 		padding: 24px;
 		border-radius: 16px;
 		outline: 1px solid rgba(255, 255, 255, 0.04);
@@ -573,9 +696,30 @@
 		align-items: flex-start;
 		gap: 12px;
 		background-color: #1a1f24;
-		background-size: cover;
-		background-position: center;
 		isolation: isolate;
+		scroll-snap-align: start;
+		transition: transform 0.3s ease, outline-color 0.3s ease;
+	}
+	.s3__card:hover {
+		transform: translateY(-4px);
+		outline-color: rgba(255, 255, 255, 0.18);
+	}
+	.s3__card:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 2px;
+	}
+	.s3__card-img {
+		position: absolute;
+		top: 0;
+		left: -8%;
+		width: 116%;
+		height: 100%;
+		object-fit: cover;
+		transform: translate3d(var(--pan, 0px), 0, 0);
+		will-change: transform;
+		z-index: 0;
+		pointer-events: none;
+		user-select: none;
 	}
 	.s3__card-overlay {
 		position: absolute;
@@ -873,9 +1017,9 @@
 			min-height: 100vh;
 		}
 		.s1__title {
-			font-size: 44px;
-			line-height: 56px;
-			letter-spacing: 0.44px;
+			font-size: 36px;
+			line-height: 44px;
+			letter-spacing: 0.36px;
 			color: #f7f7ed;
 		}
 		.s4 {
@@ -978,35 +1122,41 @@
 			margin-right: 0;
 		}
 		.s3 {
-			padding: 64px 20px;
-			gap: 48px;
+			padding: 64px 0;
+			gap: 32px;
 			align-items: stretch;
 		}
 		.s3__title {
+			padding: 0 20px;
 			max-width: none;
 			font-size: 24px;
 			line-height: 32px;
 			letter-spacing: 0.24px;
 		}
-		.s3__grid {
-			gap: 24px;
-		}
-		.s3__row {
+		.s3__shelves {
 			gap: 16px;
-			overflow-x: auto;
-			scroll-snap-type: x mandatory;
-			scrollbar-width: none;
 		}
-		.s3__row::-webkit-scrollbar {
-			display: none;
+		.s3__shelf {
+			gap: 16px;
+			scroll-padding-inline: 20px;
+		}
+		.s3__shelf-edge {
+			flex: 0 0 4px;
+		}
+		.s3__shelf[data-row='0'] .s3__card {
+			width: 240px;
+			height: 160px;
+		}
+		.s3__shelf[data-row='1'] .s3__card {
+			width: 280px;
+			height: 184px;
+		}
+		.s3__shelf[data-row='2'] .s3__card {
+			width: 320px;
+			height: 208px;
 		}
 		.s3__card {
-			flex: none;
-			width: 280px;
-			min-width: 280px;
-			height: 160px;
 			padding: 16px;
-			scroll-snap-align: start;
 		}
 		.s3__card-title {
 			font-size: 16px;

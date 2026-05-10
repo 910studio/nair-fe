@@ -29,7 +29,15 @@ export const INTRO_QUERY = groq`*[_type == "introSection" && _id == "introSectio
 
 export const DISCIPLINES_QUERY = groq`*[_type == "disciplinesSection" && _id == "disciplinesSection"][0]{
 	title,
-	cards[]{ title, image }
+	cards[]{
+		title,
+		"slug": slug.current,
+		image,
+		heroImage,
+		tagline,
+		description,
+		gallery
+	}
 }`;
 
 export const COLLABS_QUERY = groq`*[_type == "collabsSection" && _id == "collabsSection"][0]{

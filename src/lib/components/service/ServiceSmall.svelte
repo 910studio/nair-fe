@@ -493,20 +493,64 @@
 		.small__grid {
 			flex-direction: column;
 		}
+
+		/* Plans stack full-width vertically. */
 		.small__plans {
-			display: grid;
-			grid-template-columns: 1fr 1fr;
+			display: flex;
+			flex-direction: column;
 			gap: 16px;
 		}
 		.plan-card {
 			flex: none;
+			width: 100%;
 		}
+		.plan-card__head {
+			padding: 16px 20px;
+			gap: 8px;
+		}
+		.plan-card__name {
+			font-size: 16px;
+			line-height: 24px;
+			letter-spacing: 0.32px;
+		}
+		.plan-card__price {
+			font-size: 24px;
+			line-height: 32px;
+			letter-spacing: 0.24px;
+		}
+
+		/* Default plan body: horizontal scroll of 120px artist cards. */
 		.plan-card__body {
-			grid-template-columns: repeat(2, 1fr);
+			padding: 20px;
+			display: flex;
+			flex-direction: row;
+			gap: 12px;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
 		}
+		.plan-card__body::-webkit-scrollbar {
+			display: none;
+		}
+		.artist-card {
+			flex: none;
+			width: 120px;
+			height: 140px;
+		}
+
+		/* Plus plan body: 2 cards side-by-side filling width. */
 		.plan-card__body--plus {
+			display: grid;
 			grid-template-columns: repeat(2, 1fr);
+			gap: 16px;
+			overflow: visible;
 		}
+		.plan-card__body--plus .artist-card {
+			flex: 1 1 0;
+			width: auto;
+			height: auto;
+		}
+
 		.small__contact {
 			flex-direction: column;
 			align-items: stretch;

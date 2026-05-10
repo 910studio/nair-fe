@@ -9,3 +9,12 @@ export function t(value: Localized | undefined, locale: Locale): string {
 	if (!value) return '';
 	return value[locale] || value.mn || Object.values(value).find(Boolean) || '';
 }
+
+// URL-safe slug. Keeps Cyrillic so Mongolian titles still produce stable slugs.
+export function slugify(s: string): string {
+	return s
+		.toLowerCase()
+		.trim()
+		.replace(/[^a-z0-9Ѐ-ӿ]+/g, '-')
+		.replace(/^-+|-+$/g, '');
+}

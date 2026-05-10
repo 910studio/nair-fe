@@ -48,7 +48,12 @@ export interface IntroSection {
 
 export interface DisciplineCard {
 	title?: Localized;
+	slug?: string;
 	image?: SanityImage;
+	heroImage?: SanityImage;
+	tagline?: Localized;
+	description?: Localized;
+	gallery?: SanityImage[];
 }
 
 export interface DisciplinesSection {

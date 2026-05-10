@@ -3,7 +3,7 @@
 	import type { Pathname } from '$app/types';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
-	import { preloadCode, preloadData } from '$app/navigation';
+	import { onNavigate, preloadCode, preloadData } from '$app/navigation';
 	import { getLocale, locales, localizeHref } from '$lib/paraglide/runtime';
 	import { t } from '$lib/sanity';
 	import Header from '$lib/components/Header.svelte';
@@ -39,6 +39,18 @@
 
 		if (sessionStorage.getItem(INTRO_KEY)) return;
 		showIntro = true;
+	});
+
+	// View Transitions API — enables shared-element morph between landing cards
+	// and /disciplines/[slug] hero (matched via view-transition-name).
+	onNavigate((navigation) => {
+		if (typeof document === 'undefined' || !('startViewTransition' in document)) return;
+		return new Promise((resolve) => {
+			document.startViewTransition(async () => {
+				resolve();
+				await navigation.complete;
+			});
+		});
 	});
 
 	function dismissIntro() {
