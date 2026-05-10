@@ -11,8 +11,9 @@ import {
 	UsersIcon,
 	UserIcon
 } from '@sanity/icons';
+import { orderableDocumentListDeskItem } from '@sanity/orderable-document-list';
 
-export const structure: StructureResolver = (S) =>
+export const structure: StructureResolver = (S, context) =>
 	S.list()
 		.title('Nair Entertainment CMS')
 		.items([
@@ -95,14 +96,13 @@ export const structure: StructureResolver = (S) =>
 
 			S.divider(),
 
-			S.listItem()
-				.title('Үйлчилгээ')
-				.icon(ComponentIcon)
-				.child(
-					S.documentTypeList('service')
-						.title('Үйлчилгээ')
-						.defaultOrdering([{ field: 'order', direction: 'asc' }])
-				),
+			orderableDocumentListDeskItem({
+				type: 'service',
+				title: 'Үйлчилгээ',
+				icon: ComponentIcon,
+				S,
+				context
+			}),
 
 			S.listItem()
 				.title('Уран бүтээлчид')

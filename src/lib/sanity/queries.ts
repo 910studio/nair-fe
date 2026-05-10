@@ -119,7 +119,7 @@ export const SEASON_WITH_EVENTS_QUERY = groq`*[_type == "season" && slug.current
 		| order(startDate desc)${EVENT_PROJECTION}
 }`;
 
-export const ALL_SERVICES_QUERY = groq`*[_type == "service"] | order(order asc){
+export const ALL_SERVICES_QUERY = groq`*[_type == "service"] | order(orderRank asc, order asc){
 	_id,
 	slug,
 	title,

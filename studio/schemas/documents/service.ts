@@ -43,10 +43,12 @@ export const service = defineType({
 		}),
 		defineField({
 			name: 'order',
-			title: 'Эрэмбэ',
+			title: 'Эрэмбэ (хоцрогдсон)',
+			description: 'Хоцрогдсон талбар. Эрэмбэлэх бол Үйлчилгээ жагсаалтаас drag хийнэ үү.',
 			type: 'number',
 			group: 'core',
-			initialValue: 100
+			initialValue: 100,
+			hidden: true
 		}),
 		defineField({
 			name: 'layout',
