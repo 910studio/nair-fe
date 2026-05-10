@@ -500,6 +500,7 @@
 	.s1 {
 		position: relative;
 		min-height: 100vh;
+		min-height: 100dvh;
 		padding: 64px;
 		display: flex;
 		align-items: flex-end;
@@ -1015,6 +1016,7 @@
 		.s1 {
 			padding: 32px 20px;
 			min-height: 100vh;
+			min-height: 100dvh;
 		}
 		.s1__title {
 			font-size: 36px;

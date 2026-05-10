@@ -521,6 +521,7 @@
 
 		/* Default plan body: horizontal scroll of 120px artist cards. */
 		.plan-card__body {
+			flex: none;
 			padding: 20px;
 			display: flex;
 			flex-direction: row;
@@ -536,6 +537,10 @@
 			flex: none;
 			width: 120px;
 			height: 140px;
+		}
+		.artist-card__media {
+			min-height: 0;
+			height: 100%;
 		}
 
 		/* Plus plan body: 2 cards side-by-side filling width. */
