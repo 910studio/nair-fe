@@ -12,19 +12,13 @@
 	const otherLocale = $derived<Locale>(getLocale() === 'en' ? 'mn' : 'en');
 	const otherLabel = $derived(otherLocale === 'mn' ? 'MN' : 'EN');
 
-	// Service detail pages get a solid white header (not the auto-flipping frosted one).
-	const isServiceDetail = $derived(/^(?:\/(?:en|mn))?\/services\/[^/]+/.test(page.url.pathname));
-
 	let bgMode = $state<'light' | 'dark'>('light');
+	let scrolled = $state(false);
 	let headerEl: HTMLElement | undefined = $state();
 
 	function update() {
 		if (typeof window === 'undefined' || !headerEl) return;
-		// Service detail pages always get the solid light header — skip auto-detect.
-		if (isServiceDetail) {
-			bgMode = 'light';
-			return;
-		}
+		scrolled = window.scrollY > 8;
 		const headerBottom = headerEl.getBoundingClientRect().bottom;
 		const sections = document.querySelectorAll<HTMLElement>('[data-bg]');
 		// Pick the DEEPEST matching section (so a child banner with data-bg="dark"
@@ -70,7 +64,7 @@
 	bind:this={headerEl}
 	class="site-header"
 	data-bg-mode={bgMode}
-	data-solid={isServiceDetail ? 'true' : undefined}
+	data-scrolled={scrolled ? 'true' : undefined}
 >
 	<a class="brand" href={localizeHref('/')} aria-label="Nair Entertainment">
 		<img src="/client-materials/Logo/logo-dark.svg" alt="" />
@@ -174,7 +168,7 @@
 		position: absolute;
 		inset: 0;
 		bottom: auto;
-		height: calc(100% + 80px);
+		height: calc(100% + 24px);
 		background: linear-gradient(
 			180deg,
 			rgba(6, 9, 12, 0.65) 0%,
@@ -184,7 +178,9 @@
 		pointer-events: none;
 		z-index: -1;
 	}
-	.site-header[data-solid='true'] {
+	/* Frosted white bar — any light page on scroll (includes service detail,
+	   which is force-set to light mode). Top of page stays transparent. */
+	.site-header[data-scrolled='true'][data-bg-mode='light'] {
 		background: rgba(255, 255, 255, 0.8);
 		border-bottom: 1px solid rgba(6, 9, 12, 0.04);
 		backdrop-filter: blur(20px);

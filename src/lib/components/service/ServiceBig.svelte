@@ -417,6 +417,7 @@
 		font-weight: 700;
 		line-height: 32px;
 		letter-spacing: 0.24px;
+		white-space: nowrap;
 	}
 
 	/* Contact card */
@@ -902,21 +903,42 @@
 			grid-template-columns: 1fr;
 		}
 		.big-sidebar {
+			position: fixed;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			z-index: 40;
+			background: rgba(255, 255, 255, 0.8);
 			border-right: 0;
-			border-bottom: 1px solid rgba(6, 9, 12, 0.08);
-			order: 2;
+			border-top: 1px solid rgba(6, 9, 12, 0.08);
+			box-shadow: none;
+			backdrop-filter: blur(20px);
+			-webkit-backdrop-filter: blur(20px);
 		}
 		.big-sidebar__nav {
 			position: static;
-			padding: 32px 24px;
+			padding: 20px;
 			flex-direction: row;
-			flex-wrap: wrap;
+			flex-wrap: nowrap;
+			gap: 12px;
+			overflow-x: auto;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+		}
+		.big-sidebar__nav::-webkit-scrollbar {
+			display: none;
 		}
 		.big-sidebar__btn {
 			width: auto;
+			flex: none;
+			white-space: nowrap;
+			padding: 12px 16px;
+			font-size: 14px;
+			line-height: 16px;
+			letter-spacing: 0.28px;
 		}
 		.big-main {
-			order: 1;
+			padding-bottom: 88px;
 		}
 		.big-intro__row {
 			grid-template-columns: 1fr;

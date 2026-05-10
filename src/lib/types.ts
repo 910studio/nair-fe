@@ -89,3 +89,9 @@ export interface ServiceBig extends ServiceBase {
 }
 
 export type Service = ServiceSmall | ServiceMedium | ServiceBig;
+
+export interface ServiceLabels {
+	price?: Localized;
+	contactLabel?: Localized;
+	contactCta?: Localized;
+}

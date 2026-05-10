@@ -16,7 +16,7 @@
 	.banner {
 		position: relative;
 		width: 100%;
-		height: 320px;
+		height: 380px;
 		background-color: #1a1f24;
 		background-image: var(--banner-image);
 		background-size: cover;
@@ -24,7 +24,7 @@
 		display: flex;
 		align-items: flex-end;
 		justify-content: center;
-		padding: 32px;
+		padding: 88px 32px 32px;
 		border-bottom: 1px solid rgba(6, 9, 12, 0.08);
 	}
 	.banner[data-title-align='center'] {
@@ -50,8 +50,8 @@
 
 	@media (max-width: 768px) {
 		.banner {
-			height: 240px;
-			padding: 24px 20px;
+			height: 300px;
+			padding: 80px 20px 24px;
 		}
 		.banner__title {
 			font-size: 28px;

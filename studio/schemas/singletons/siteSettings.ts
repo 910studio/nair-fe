@@ -8,6 +8,7 @@ export const siteSettings = defineType({
 	icon: CogIcon,
 	groups: [
 		{ name: 'contact', title: 'Холбоо барих', default: true },
+		{ name: 'serviceLabels', title: 'Үйлчилгээний хуудасны шошго' },
 		{ name: 'social', title: 'Сошиал' },
 		{ name: 'footer', title: 'Хөлийн хэсэг' }
 	],
@@ -50,6 +51,27 @@ export const siteSettings = defineType({
 					}
 				}
 			]
+		}),
+		defineField({
+			name: 'serviceLabelPrice',
+			title: 'Үнийн шошго',
+			type: 'localizedString',
+			group: 'serviceLabels',
+			description: "Үйлчилгээний хуудасны үнийн хайрцаг (жишээ: 'Хөтөлбөрийн үнэ')."
+		}),
+		defineField({
+			name: 'serviceContactLabel',
+			title: 'Холбоо барих шошго',
+			type: 'localizedString',
+			group: 'serviceLabels',
+			description: "Холбоо барих хайрцгийн дээрх жижиг текст (жишээ: 'Бидэнтэй холбогдох')."
+		}),
+		defineField({
+			name: 'serviceContactCta',
+			title: 'Холбоо барих товчийн текст',
+			type: 'localizedString',
+			group: 'serviceLabels',
+			description: "Утас руу залгах товчны бичвэр (жишээ: 'Утсаар холбогдох')."
 		}),
 		defineField({
 			name: 'footerCopyright',

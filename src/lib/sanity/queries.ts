@@ -3,6 +3,9 @@ import groq from 'groq';
 export const SITE_SETTINGS_QUERY = groq`*[_type == "siteSettings" && _id == "siteSettings"][0]{
 	phone,
 	socials,
+	serviceLabelPrice,
+	serviceContactLabel,
+	serviceContactCta,
 	footerCopyright
 }`;
 

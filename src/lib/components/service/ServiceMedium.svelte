@@ -1,17 +1,20 @@
 <script lang="ts">
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
-	import type { ServiceMedium } from '$lib/types';
+	import type { ServiceMedium, ServiceLabels } from '$lib/types';
 	import type { Localized } from '$lib/types';
 	import ServiceBanner from './ServiceBanner.svelte';
 	import ServiceGallery from './ServiceGallery.svelte';
 
 	let {
 		service,
-		phone = '99994455'
-	}: { service: ServiceMedium; phone?: string } = $props();
+		phone = '99994455',
+		labels = {}
+	}: { service: ServiceMedium; phone?: string; labels?: ServiceLabels } = $props();
 	const t = (v: Localized | undefined) => (v ? v[getLocale()] : '');
 	const phoneHref = $derived(`tel:${phone.replace(/\s+/g, '')}`);
+	const contactLabel = $derived(labels.contactLabel?.[getLocale()] || m.service_contact_label());
+	const contactCta = $derived(labels.contactCta?.[getLocale()] || m.service_contact_cta());
 </script>
 
 <ServiceBanner
@@ -85,7 +88,7 @@
 <!-- s2: contact CTA -->
 <section class="medium-contact" data-bg="light">
 	<div class="medium-contact__card">
-		<p class="medium-contact__label">{m.service_contact_label()}</p>
+		<p class="medium-contact__label">{contactLabel}</p>
 		<a class="medium-contact__cta" href={phoneHref}>
 			<svg
 				class="medium-contact__icon"
@@ -101,7 +104,7 @@
 					d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"
 				/>
 			</svg>
-			<span>{m.service_contact_cta()}</span>
+			<span>{contactCta}</span>
 		</a>
 	</div>
 </section>

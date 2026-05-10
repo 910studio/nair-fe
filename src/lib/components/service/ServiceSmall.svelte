@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { m } from '$lib/paraglide/messages.js';
-	import type { ServiceSmall } from '$lib/types';
+	import type { ServiceSmall, ServiceLabels } from '$lib/types';
 	import type { Localized } from '$lib/types';
 	import ServiceBanner from './ServiceBanner.svelte';
 	import ServiceGallery from './ServiceGallery.svelte';
@@ -10,10 +10,13 @@
 
 	let {
 		service,
-		phone = '99994455'
-	}: { service: ServiceSmall; phone?: string } = $props();
+		phone = '99994455',
+		labels = {}
+	}: { service: ServiceSmall; phone?: string; labels?: ServiceLabels } = $props();
 	const t = (v: Localized) => v[getLocale()];
 	const phoneHref = $derived(`tel:${phone.replace(/\s+/g, '')}`);
+	const contactLabel = $derived(labels.contactLabel?.[getLocale()] || m.service_contact_label());
+	const contactCta = $derived(labels.contactCta?.[getLocale()] || m.service_contact_cta());
 </script>
 
 <ServiceBanner
@@ -42,7 +45,7 @@
 						/>
 						<InfoCard
 							label={m.service_label_artists()}
-							value={t(service.artists)}
+							value={t(service.artists).split(/(?<=\d)\s+(?=[A-ZА-Я])/).join('\n')}
 							illustration="/client-materials/artists-illustration.svg"
 						/>
 					</aside>
@@ -112,7 +115,7 @@
 			{/if}
 
 				<div class="small__contact">
-					<p class="small__contact-label">{m.service_contact_label()}</p>
+					<p class="small__contact-label">{contactLabel}</p>
 					<a class="small__contact-cta" href={phoneHref}>
 						<svg
 							class="small__contact-icon"
@@ -128,7 +131,7 @@
 								d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"
 							/>
 						</svg>
-						<span>{m.service_contact_cta()}</span>
+						<span>{contactCta}</span>
 					</a>
 				</div>
 			</div>
@@ -190,18 +193,18 @@
 	.small__description {
 		position: relative;
 		z-index: 1;
-		padding: 24px;
+		width: fit-content;
+		max-width: min(100%, 720px);
+		margin: 0 auto;
+		padding: 20px 24px;
 		background: #fff;
 		border-radius: 16px;
 		outline: 1px solid rgba(6, 9, 12, 0.08);
 		outline-offset: -1px;
 		box-shadow: 0 8px 24px rgba(6, 9, 12, 0.02);
-		display: flex;
-		justify-content: center;
 	}
 	.small__description p {
 		margin: 0;
-		max-width: 640px;
 		text-align: center;
 		color: #06090c;
 		font-size: 16px;
@@ -487,9 +490,16 @@
 		.small__group--first {
 			margin-top: -40px;
 		}
-		.small__grid,
-		.small__plans {
+		.small__grid {
 			flex-direction: column;
+		}
+		.small__plans {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 16px;
+		}
+		.plan-card {
+			flex: none;
 		}
 		.plan-card__body {
 			grid-template-columns: repeat(2, 1fr);

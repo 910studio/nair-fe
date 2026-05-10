@@ -17,6 +17,9 @@ export interface SanityFile {
 export interface SiteSettings {
 	phone?: string;
 	socials?: { platform: string; url: string }[];
+	serviceLabelPrice?: Localized;
+	serviceContactLabel?: Localized;
+	serviceContactCta?: Localized;
 	footerCopyright?: Localized;
 }
 

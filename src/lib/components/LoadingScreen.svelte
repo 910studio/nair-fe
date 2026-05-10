@@ -1,6 +1,5 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { m } from '$lib/paraglide/messages.js';
 
 	type Props = {
 		maxDuration?: number;
@@ -85,8 +84,6 @@
 			d="M50.7634 50.1278C49.1661 54.2685 46.1063 57.2451 42.856 58.2561C47.0128 58.1027 51.3008 54.6629 53.32 49.4266C53.8701 48.0024 54.2043 46.5629 54.3389 45.1606L51.7508 45.9932C51.6196 47.3482 51.2977 48.7443 50.7634 50.1278Z"
 		/>
 	</svg>
-
-	<button type="button" class="skip" onclick={dismiss}>{m.intro_skip()}</button>
 </div>
 
 <style>
@@ -163,23 +160,5 @@
 		to {
 			fill: #fff;
 		}
-	}
-
-	.skip {
-		position: absolute;
-		bottom: 1.5rem;
-		right: 1.5rem;
-		appearance: none;
-		background: transparent;
-		color: #000;
-		border: 2px solid #000;
-		padding: 0.5rem 1rem;
-		font: inherit;
-		font-weight: 600;
-		cursor: pointer;
-	}
-	.skip:hover {
-		background: #000;
-		color: #fff;
 	}
 </style>
