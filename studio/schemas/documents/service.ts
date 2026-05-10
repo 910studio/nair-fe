@@ -426,6 +426,45 @@ export const service = defineType({
 					}
 				}
 			]
+		}),
+
+		// ── Logo belt (optional, per-service) ─────────────
+		defineField({
+			name: 'logoBeltTitle',
+			title: 'Лого хаяган дээрх гарчиг',
+			type: 'localizedString',
+			group: 'core',
+			description: 'Хоосон бол хуудсанд лого хаяг харагдахгүй.'
+		}),
+		defineField({
+			name: 'logoBeltPartners',
+			title: 'Лого хаяг (хамтрагчид)',
+			type: 'array',
+			group: 'core',
+			description: 'Энэ үйлчилгээний хуудсанд харуулах хамтрагчдын лого.',
+			of: [
+				{
+					type: 'object',
+					fields: [
+						defineField({
+							name: 'name',
+							title: 'Нэр',
+							type: 'string',
+							description: 'Дотоод нэр. Зургийн alt текстэд хэрэглэгдэнэ.'
+						}),
+						defineField({
+							name: 'logo',
+							title: 'Лого (тунгалаг дэвсгэр дээр цагаан)',
+							type: 'image',
+							description: 'Тэмдэг ба нэрийг агуулсан бүтэн лого. ~48px өндөртэй харагдана.',
+							options: { hotspot: true, accept: 'image/svg+xml,image/png' }
+						})
+					],
+					preview: {
+						select: { title: 'name', media: 'logo' }
+					}
+				}
+			]
 		})
 	],
 	orderings: [

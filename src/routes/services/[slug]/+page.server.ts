@@ -134,5 +134,18 @@ export const load: PageServerLoad = async ({ params }) => {
 		null
 	);
 	if (!fromSanity) error(404, 'Service not found');
-	return { service: toLocalShape(fromSanity) };
+
+	const logoBelt =
+		fromSanity.logoBeltPartners && fromSanity.logoBeltPartners.length > 0
+			? {
+					title: fromSanity.logoBeltTitle,
+					partners: fromSanity.logoBeltPartners.map((p, i) => ({
+						id: `srv-${i}`,
+						name: p.name ?? '',
+						logo: p.logo ? imgUrl(p.logo, 240) : null
+					}))
+				}
+			: null;
+
+	return { service: toLocalShape(fromSanity), logoBelt };
 };

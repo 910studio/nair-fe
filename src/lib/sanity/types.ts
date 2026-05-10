@@ -110,6 +110,11 @@ export interface Event {
 
 export type ServiceLayout = 'small' | 'medium' | 'big';
 
+export interface ServiceLogoBeltPartner {
+	name?: string;
+	logo?: SanityImage;
+}
+
 export interface ServiceBase {
 	_id: string;
 	slug: { current: string };
@@ -118,6 +123,8 @@ export interface ServiceBase {
 	bannerImage?: SanityImage;
 	order?: number;
 	layout: ServiceLayout;
+	logoBeltTitle?: Localized;
+	logoBeltPartners?: ServiceLogoBeltPartner[];
 }
 
 export interface SanityArtistRef {

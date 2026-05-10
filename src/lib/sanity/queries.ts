@@ -178,7 +178,10 @@ export const SERVICE_BY_SLUG_QUERY = groq`*[_type == "service" && slug.current =
 				"artist": artist->{ _id, name, role, photo }
 			}
 		}
-	}
+	},
+	// per-service logo belt
+	logoBeltTitle,
+	logoBeltPartners
 }`;
 
 export const ALL_ARTISTS_QUERY = groq`*[_type == "artist"] | order(order asc, name.en asc){
