@@ -9,12 +9,10 @@
 
 	let {
 		services = [],
-		phone,
-		socials = []
+		phone
 	}: {
 		services?: SanityService[];
 		phone?: string;
-		socials?: { platform: string; url: string }[];
 	} = $props();
 
 	const otherLocale = $derived<Locale>(getLocale() === 'en' ? 'mn' : 'en');
@@ -152,7 +150,7 @@
 	</div>
 </header>
 
-<ServicesDrawer open={drawer.open} onClose={() => drawer.close()} {services} {phone} {socials} />
+<ServicesDrawer open={drawer.open} onClose={() => drawer.close()} {services} {phone} />
 
 <style>
 	.site-header {

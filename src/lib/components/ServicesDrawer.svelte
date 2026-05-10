@@ -8,9 +8,8 @@
 		onClose: () => void;
 		services?: SanityService[];
 		phone?: string;
-		socials?: { platform: string; url: string }[];
 	};
-	let { open, onClose, services = [], phone, socials = [] }: Props = $props();
+	let { open, onClose, services = [], phone }: Props = $props();
 
 	const locale = $derived(getLocale());
 	const items = $derived(
@@ -24,10 +23,6 @@
 
 	const phoneText = $derived(phone || '76004455');
 	const phoneHref = $derived(`tel:${phoneText.replace(/\s+/g, '')}`);
-	const socialOf = (platform: string) => socials.find((s) => s.platform === platform)?.url;
-	const fbUrl = $derived(socialOf('facebook'));
-	const igUrl = $derived(socialOf('instagram'));
-	const ytUrl = $derived(socialOf('youtube'));
 
 	$effect(() => {
 		if (open) {
@@ -123,63 +118,6 @@
 				</svg>
 				<span>{phoneText}</span>
 			</a>
-
-			<div class="drawer__socials">
-				{#if fbUrl}
-					<a
-						class="drawer__social"
-						href={fbUrl}
-						target="_blank"
-						rel="noopener"
-						aria-label="Facebook"
-						tabindex={open ? 0 : -1}
-					>
-						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path
-								d="M22 12.06C22 6.5 17.52 2 12 2S2 6.5 2 12.06c0 5.02 3.66 9.18 8.44 9.94v-7.03H7.9v-2.91h2.54V9.85c0-2.51 1.49-3.9 3.77-3.9 1.09 0 2.24.2 2.24.2v2.47h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.78l-.44 2.91h-2.34V22c4.78-.76 8.44-4.92 8.44-9.94z"
-							/>
-						</svg>
-					</a>
-				{/if}
-				{#if igUrl}
-					<a
-						class="drawer__social"
-						href={igUrl}
-						target="_blank"
-						rel="noopener"
-						aria-label="Instagram"
-						tabindex={open ? 0 : -1}
-					>
-						<svg
-							viewBox="0 0 24 24"
-							fill="none"
-							stroke="currentColor"
-							stroke-width="2"
-							aria-hidden="true"
-						>
-							<rect x="3" y="3" width="18" height="18" rx="5" />
-							<circle cx="12" cy="12" r="4" />
-							<circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-						</svg>
-					</a>
-				{/if}
-				{#if ytUrl}
-					<a
-						class="drawer__social"
-						href={ytUrl}
-						target="_blank"
-						rel="noopener"
-						aria-label="YouTube"
-						tabindex={open ? 0 : -1}
-					>
-						<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-							<path
-								d="M23.5 6.2a3 3 0 00-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 00.5 6.2C0 8 0 12 0 12s0 4 .5 5.8a3 3 0 002.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 002.1-2.1c.5-1.8.5-5.8.5-5.8s0-4-.5-5.8zM9.6 15.6V8.4l6.2 3.6-6.2 3.6z"
-							/>
-						</svg>
-					</a>
-				{/if}
-			</div>
 		</footer>
 	</aside>
 </div>
@@ -357,23 +295,5 @@
 		width: 20px;
 		height: 20px;
 		flex: none;
-	}
-	.drawer__socials {
-		display: flex;
-		gap: 12px;
-	}
-	.drawer__social {
-		flex: 1;
-		display: grid;
-		place-items: center;
-		padding: 12px;
-		background: rgba(6, 9, 12, 0.04);
-		border: 1px solid rgba(6, 9, 12, 0.04);
-		border-radius: 8px;
-		color: #06090c;
-	}
-	.drawer__social svg {
-		width: 24px;
-		height: 24px;
 	}
 </style>
