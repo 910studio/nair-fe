@@ -15,6 +15,7 @@
 	const phoneHref = $derived(`tel:${phone.replace(/\s+/g, '')}`);
 
 	let activeId = $state('');
+	let navEl: HTMLElement | undefined = $state();
 
 	const navParts = $derived(service.parts.filter((p) => p.kind !== 'cta'));
 
@@ -23,6 +24,21 @@
 		if (!el) return;
 		el.scrollIntoView({ behavior: 'smooth', block: 'start' });
 	}
+
+	// On mobile the nav is a horizontal scroller pinned at the bottom — keep
+	// the active button centered in the bar as the page scrolls.
+	$effect(() => {
+		if (!activeId || !navEl) return;
+		const btn = navEl.querySelector<HTMLElement>(
+			`[data-part-id="${CSS.escape(activeId)}"]`
+		);
+		if (!btn) return;
+		const navRect = navEl.getBoundingClientRect();
+		const btnRect = btn.getBoundingClientRect();
+		const target =
+			navEl.scrollLeft + (btnRect.left - navRect.left) - (navRect.width - btnRect.width) / 2;
+		navEl.scrollTo({ left: target, behavior: 'smooth' });
+	});
 
 	onMount(() => {
 		activeId = navParts[0]?.id ?? '';
@@ -45,12 +61,13 @@
 
 <div class="big-page">
 	<aside class="big-sidebar" aria-label={m.service_label_parts()}>
-		<nav class="big-sidebar__nav">
+		<nav class="big-sidebar__nav" bind:this={navEl}>
 			{#each navParts as part (part.id)}
 				<button
 					type="button"
 					class="big-sidebar__btn"
 					class:big-sidebar__btn--active={activeId === part.id}
+					data-part-id={part.id}
 					onclick={() => go(part.id)}
 				>
 					{t(part.title)}
@@ -390,6 +407,8 @@
 
 	/* Price card */
 	.big-price {
+		min-width: 0;
+		container-type: inline-size;
 		padding: 24px;
 		background: #fff;
 		border-radius: 16px;
@@ -411,11 +430,12 @@
 		letter-spacing: 0.4px;
 	}
 	.big-price__value {
+		max-width: 100%;
 		margin: 0;
 		color: #06090c;
-		font-size: 24px;
+		font-size: clamp(16px, 7cqi, 24px);
 		font-weight: 700;
-		line-height: 32px;
+		line-height: 1.33;
 		letter-spacing: 0.24px;
 		white-space: nowrap;
 	}
@@ -915,6 +935,9 @@
 			backdrop-filter: blur(20px);
 			-webkit-backdrop-filter: blur(20px);
 		}
+		.big-main {
+			padding-bottom: 88px;
+		}
 		.big-sidebar__nav {
 			position: static;
 			padding: 20px;
@@ -936,9 +959,6 @@
 			font-size: 14px;
 			line-height: 16px;
 			letter-spacing: 0.28px;
-		}
-		.big-main {
-			padding-bottom: 88px;
 		}
 		.big-intro__row {
 			grid-template-columns: 1fr;
