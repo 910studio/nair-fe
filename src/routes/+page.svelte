@@ -655,7 +655,9 @@
 		scrollbar-width: none;
 		-ms-overflow-style: none;
 		-webkit-overflow-scrolling: touch;
-		touch-action: pan-x;
+		/* pan-x pan-y so horizontal pans scroll the shelf (overflow-x: auto),
+		   vertical pans bubble to the page. pan-x alone blocks vertical scroll. */
+		touch-action: pan-x pan-y;
 		overscroll-behavior-x: contain;
 	}
 	.s3__shelf::-webkit-scrollbar {
