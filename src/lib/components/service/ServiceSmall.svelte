@@ -555,6 +555,10 @@
 			width: auto;
 			height: auto;
 		}
+		.plan-card__body--plus .artist-card__media {
+			flex: none;
+			height: auto;
+		}
 
 		.small__contact {
 			flex-direction: column;
