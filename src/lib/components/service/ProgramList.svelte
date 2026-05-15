@@ -19,20 +19,7 @@
 	<ul class="program__list">
 		{#each items as item, i (i)}
 			<li class="program__item" class:program__item--inactive={!item.active}>
-				{#if item.active}
-					<svg
-						class="program__chevron"
-						viewBox="0 0 20 20"
-						fill="none"
-						stroke="currentColor"
-						stroke-width="2"
-						stroke-linecap="round"
-						stroke-linejoin="round"
-						aria-hidden="true"
-					>
-						<polyline points="7 5 13 10 7 15" />
-					</svg>
-				{/if}
+				<span class="program__dot" aria-hidden="true"></span>
 				<span class="program__label">{t(item.label)}</span>
 			</li>
 		{/each}
@@ -73,17 +60,27 @@
 		align-items: center;
 		gap: 12px;
 	}
-	.program__item--inactive {
-		padding-left: 32px;
-	}
-	.program__item--inactive .program__label {
-		color: rgba(6, 9, 12, 0.64);
-	}
-	.program__chevron {
+	.program__dot {
 		flex: none;
 		width: 20px;
 		height: 20px;
-		color: rgba(6, 9, 12, 0.24);
+		display: inline-block;
+		position: relative;
+	}
+	.program__dot::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 10px;
+		height: 10px;
+		border-radius: 50%;
+		background: #9e1c21;
+		transform: translate(-50%, -50%);
+	}
+	.program__item--inactive .program__dot::before {
+		background: transparent;
+		box-shadow: inset 0 0 0 2px #9e1c21;
 	}
 	.program__label {
 		flex: 1 1 0;

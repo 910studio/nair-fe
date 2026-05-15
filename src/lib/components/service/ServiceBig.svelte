@@ -16,8 +16,16 @@
 
 	let activeId = $state('');
 	let navEl: HTMLElement | undefined = $state();
+	let expanded = $state<Record<string, boolean>>({});
 
 	const navParts = $derived(service.parts.filter((p) => p.kind !== 'cta'));
+
+	function isExpanded(key: string) {
+		return expanded[key] === true;
+	}
+	function toggleExpanded(key: string) {
+		expanded[key] = !isExpanded(key);
+	}
 
 	function go(id: string) {
 		const el = document.getElementById(id);
@@ -88,33 +96,11 @@
 				<p>{t(service.description)}</p>
 			</div>
 
-			{#if service.priceRange || phone}
+			{#if service.priceRange}
 				<div class="big-intro__row">
-					{#if service.priceRange}
-						<div class="big-price">
-							<p class="big-price__label">{m.service_label_price()}</p>
-							<p class="big-price__value">{t(service.priceRange)}</p>
-						</div>
-					{/if}
-					<div class="big-contact">
-						<p class="big-contact__label">{m.service_contact_label()}</p>
-						<a class="big-contact__cta" href={phoneHref}>
-							<svg
-								class="big-contact__icon"
-								viewBox="0 0 24 24"
-								fill="none"
-								stroke="currentColor"
-								stroke-width="2"
-								stroke-linecap="round"
-								stroke-linejoin="round"
-								aria-hidden="true"
-							>
-								<path
-									d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.37 1.9.72 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.35 1.85.59 2.81.72A2 2 0 0 1 22 16.92z"
-								/>
-							</svg>
-							<span>{m.service_contact_cta()}</span>
-						</a>
+					<div class="big-price">
+						<p class="big-price__label">{m.service_label_price()}</p>
+						<p class="big-price__value">{t(service.priceRange)}</p>
 					</div>
 				</div>
 			{/if}
@@ -180,7 +166,9 @@
 								{#if sub.options?.length}
 									<div class="big-sub__options">
 										{#each sub.options as opt, oIdx (oIdx)}
-											<div class="big-option">
+											{@const optKey = `${part.id}-${sIdx}-${oIdx}`}
+											{@const open = isExpanded(optKey)}
+											<div class="big-option" class:big-option--collapsed={!open}>
 												{#if opt.image}
 													<img
 														class="big-option__img"
@@ -191,46 +179,57 @@
 												{:else}
 													<div class="big-option__img big-option__img--placeholder"></div>
 												{/if}
-												<div class="big-option__meta">
-													{#if opt.label}
-														<p class="big-option__label">{t(opt.label)}</p>
-													{/if}
-													<p class="big-option__title">{t(opt.title)}</p>
-												</div>
-
-												{#if opt.programmeItems?.length}
-													<ul class="big-option__programme">
-														{#each opt.programmeItems as item, pIdx (pIdx)}
-															<li
-																class="big-option__programme-item"
-																class:big-option__programme-item--inactive={item.active === false}
-															>
-																{#if item.active !== false}
-																	<svg
-																		class="big-option__chevron"
-																		viewBox="0 0 16 16"
-																		fill="none"
-																		stroke="currentColor"
-																		stroke-width="2"
-																		stroke-linecap="round"
-																		stroke-linejoin="round"
-																		aria-hidden="true"
-																	>
-																		<polyline points="6 4 10 8 6 12" />
-																	</svg>
-																{/if}
-																<span>{t(item.label)}</span>
-															</li>
-														{/each}
-													</ul>
-												{/if}
-
-												{#if opt.artistTags?.length}
-													<div class="big-option__tags">
-														{#each opt.artistTags as tag, tIdx (tIdx)}
-															<span class="big-option__tag">{t(tag)}</span>
-														{/each}
+												<button
+													type="button"
+													class="big-option__toggle"
+													onclick={() => toggleExpanded(optKey)}
+													aria-expanded={open}
+												>
+													<div class="big-option__meta">
+														{#if opt.label}
+															<p class="big-option__label">{t(opt.label)}</p>
+														{/if}
+														<p class="big-option__title">{t(opt.title)}</p>
 													</div>
+													<svg
+														class="big-option__caret"
+														viewBox="0 0 16 16"
+														fill="none"
+														stroke="currentColor"
+														stroke-width="2"
+														stroke-linecap="round"
+														stroke-linejoin="round"
+														aria-hidden="true"
+													>
+														<polyline points="4 6 8 10 12 6" />
+													</svg>
+												</button>
+
+												{#if open}
+													{#if opt.programmeItems?.length}
+														<ul class="big-option__programme">
+															{#each opt.programmeItems as item, pIdx (pIdx)}
+																<li
+																	class="big-option__programme-item"
+																	class:big-option__programme-item--inactive={item.active === false}
+																>
+																	<span
+																		class="big-option__dot"
+																		aria-hidden="true"
+																	></span>
+																	<span>{t(item.label)}</span>
+																</li>
+															{/each}
+														</ul>
+													{/if}
+
+													{#if opt.artistTags?.length}
+														<div class="big-option__tags">
+															{#each opt.artistTags as tag, tIdx (tIdx)}
+																<span class="big-option__tag">{t(tag)}</span>
+															{/each}
+														</div>
+													{/if}
 												{/if}
 											</div>
 										{/each}
@@ -401,7 +400,7 @@
 		width: 100%;
 		max-width: 920px;
 		display: grid;
-		grid-template-columns: 1fr 1fr;
+		grid-template-columns: 1fr;
 		gap: 20px;
 	}
 
@@ -438,57 +437,6 @@
 		line-height: 1.33;
 		letter-spacing: 0.24px;
 		white-space: nowrap;
-	}
-
-	/* Contact card */
-	.big-contact {
-		padding: 24px;
-		background: #fff;
-		border-radius: 16px;
-		outline: 1px solid rgba(6, 9, 12, 0.08);
-		outline-offset: -1px;
-		box-shadow: 0 8px 24px rgba(6, 9, 12, 0.02);
-		display: flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: flex-start;
-		gap: 16px;
-	}
-	.big-contact__label {
-		align-self: stretch;
-		margin: 0;
-		color: #06090c;
-		font-size: 20px;
-		font-weight: 600;
-		line-height: 28px;
-		letter-spacing: 0.4px;
-	}
-	.big-contact__cta {
-		align-self: stretch;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		gap: 10px;
-		padding: 12px 20px 12px 16px;
-		background: #06090c;
-		color: #fff;
-		border-radius: 8px;
-		outline: 1px solid rgba(255, 255, 255, 0.04);
-		outline-offset: -1px;
-		text-decoration: none;
-		font-size: 16px;
-		font-weight: 600;
-		line-height: 24px;
-		letter-spacing: 0.32px;
-		transition: background-color 0.2s ease;
-	}
-	.big-contact__cta:hover {
-		background: #1a1f24;
-	}
-	.big-contact__icon {
-		width: 20px;
-		height: 20px;
-		flex: none;
 	}
 
 	/* ─── Parts ─── */
@@ -649,7 +597,7 @@
 		display: grid;
 		grid-template-columns: repeat(3, 1fr);
 		gap: 20px;
-		align-items: stretch;
+		align-items: start;
 	}
 
 	/* ─── Option card ─── */
@@ -678,8 +626,34 @@
 			),
 			#eef0f4;
 	}
-	.big-option__meta {
+	.big-option__toggle {
+		appearance: none;
+		background: transparent;
+		border: 0;
 		padding: 16px 20px;
+		display: flex;
+		align-items: center;
+		gap: 12px;
+		text-align: left;
+		cursor: pointer;
+		border-bottom: 1px solid rgba(6, 9, 12, 0.04);
+		font: inherit;
+		color: inherit;
+		transition: background-color 0.15s ease;
+	}
+	.big-option__toggle:hover {
+		background: rgba(6, 9, 12, 0.02);
+	}
+	.big-option__toggle:focus-visible {
+		outline: 2px solid #9e1c21;
+		outline-offset: -2px;
+	}
+	.big-option--collapsed .big-option__toggle {
+		border-bottom: 0;
+	}
+	.big-option__meta {
+		flex: 1 1 auto;
+		min-width: 0;
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
@@ -700,8 +674,15 @@
 		line-height: 24px;
 		letter-spacing: 0.32px;
 	}
-	.big-option__meta {
-		border-bottom: 1px solid rgba(6, 9, 12, 0.04);
+	.big-option__caret {
+		flex: none;
+		width: 20px;
+		height: 20px;
+		color: rgba(6, 9, 12, 0.48);
+		transition: transform 0.2s ease;
+	}
+	.big-option--collapsed .big-option__caret {
+		transform: rotate(-90deg);
 	}
 
 	/* Programme list inside option */
@@ -724,15 +705,27 @@
 		line-height: 20px;
 		letter-spacing: 0.28px;
 	}
-	.big-option__programme-item--inactive {
-		padding-left: 24px;
-		color: rgba(6, 9, 12, 0.64);
-	}
-	.big-option__chevron {
+	.big-option__dot {
 		flex: none;
 		width: 16px;
 		height: 16px;
-		color: rgba(6, 9, 12, 0.24);
+		display: inline-block;
+		position: relative;
+	}
+	.big-option__dot::before {
+		content: '';
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		width: 8px;
+		height: 8px;
+		border-radius: 50%;
+		background: #9e1c21;
+		transform: translate(-50%, -50%);
+	}
+	.big-option__programme-item--inactive .big-option__dot::before {
+		background: transparent;
+		box-shadow: inset 0 0 0 2px #9e1c21;
 	}
 
 	/* Artist tags inside option */
