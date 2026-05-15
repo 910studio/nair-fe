@@ -289,12 +289,15 @@
 		flex-direction: column;
 	}
 	.artist-card__media {
+		position: relative;
 		width: 100%;
 		aspect-ratio: 1 / 1;
 		background: #eef0f4;
 		flex: none;
 	}
 	.artist-card__media img {
+		position: absolute;
+		inset: 0;
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
