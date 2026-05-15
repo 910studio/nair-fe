@@ -584,10 +584,10 @@
 		word-wrap: break-word;
 	}
 	.s1__mute {
-		position: absolute;
+		position: fixed;
 		bottom: 24px;
 		right: 24px;
-		z-index: 3;
+		z-index: 45;
 		width: 48px;
 		height: 48px;
 		display: grid;
