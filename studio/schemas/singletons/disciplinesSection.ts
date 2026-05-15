@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { ThListIcon } from '@sanity/icons';
+import { maxImageSize, maxInlineImageSize } from '../lib/maxFileSize';
 
 export const disciplinesSection = defineType({
 	name: 'disciplinesSection',
@@ -41,15 +42,18 @@ export const disciplinesSection = defineType({
 							name: 'image',
 							title: 'Карт зураг',
 							type: 'image',
-							options: { hotspot: true }
+							description: '16:9, ~1200×680. <2MB.',
+							options: { hotspot: true },
+							validation: maxImageSize(2)
 						}),
 						defineField({
 							name: 'heroImage',
 							title: 'Дэлгэрэнгүй хуудасны том зураг (сонголтоор)',
 							description:
-								'Хоосон бол карт зургийг ашиглана. Илүү өндөр нягтралтай эсвэл өөр кадр хэрэгтэй бол энд оруулна.',
+								'Хоосон бол карт зургийг ашиглана. ~2400×1260. <4MB.',
 							type: 'image',
-							options: { hotspot: true }
+							options: { hotspot: true },
+							validation: maxImageSize(4)
 						}),
 						defineField({
 							name: 'tagline',
@@ -65,8 +69,15 @@ export const disciplinesSection = defineType({
 						defineField({
 							name: 'gallery',
 							title: 'Дэлгэрэнгүй — зургийн цомог (сонголтоор)',
+							description: 'Зураг тус бүр <3MB.',
 							type: 'array',
-							of: [{ type: 'image', options: { hotspot: true } }]
+							of: [
+								{
+									type: 'image',
+									options: { hotspot: true },
+									validation: maxInlineImageSize(3)
+								}
+							]
 						})
 					],
 					preview: {

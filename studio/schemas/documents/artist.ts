@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { UserIcon } from '@sanity/icons';
+import { maxImageSize } from '../lib/maxFileSize';
 
 export const artist = defineType({
 	name: 'artist',
@@ -25,7 +26,9 @@ export const artist = defineType({
 			name: 'photo',
 			title: 'Зураг',
 			type: 'image',
-			options: { hotspot: true }
+			description: 'Хөрөг. 4:5 эсвэл 1:1, ~800×1000. <2MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(2)
 		}),
 		defineField({
 			name: 'bio',

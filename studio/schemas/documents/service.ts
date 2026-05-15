@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { ComponentIcon } from '@sanity/icons';
+import { maxImageSize, maxInlineImageSize } from '../lib/maxFileSize';
 
 export const service = defineType({
 	name: 'service',
@@ -39,7 +40,9 @@ export const service = defineType({
 			title: 'Толгой зураг',
 			type: 'image',
 			group: 'core',
-			options: { hotspot: true }
+			description: '2:1, ~2560×1280. <5MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(5)
 		}),
 		defineField({
 			name: 'order',
@@ -179,8 +182,14 @@ export const service = defineType({
 			title: 'Зургийн цомог',
 			type: 'array',
 			group: 'layout',
-			description: 'Сонголтоор. Багцуудын доор слайдер хэлбэрээр харагдана.',
-			of: [{ type: 'image', options: { hotspot: true } }]
+			description: 'Сонголтоор. Багцуудын доор слайдер хэлбэрээр харагдана. Зураг тус бүр <3MB.',
+			of: [
+				{
+					type: 'image',
+					options: { hotspot: true },
+					validation: maxInlineImageSize(3)
+				}
+			]
 		}),
 		defineField({
 			name: 'disclaimer',
@@ -345,7 +354,9 @@ export const service = defineType({
 															name: 'image',
 															title: 'Зураг',
 															type: 'image',
-															options: { hotspot: true }
+															description: '16:10, ~960×600. <2MB.',
+															options: { hotspot: true },
+															validation: maxInlineImageSize(2)
 														},
 														{
 															name: 'programmeItems',
@@ -466,8 +477,9 @@ export const service = defineType({
 							name: 'logo',
 							title: 'Лого (тунгалаг дэвсгэр дээр цагаан)',
 							type: 'image',
-							description: 'Тэмдэг ба нэрийг агуулсан бүтэн лого. ~48px өндөртэй харагдана.',
-							options: { hotspot: true, accept: 'image/svg+xml,image/png' }
+							description: 'Тэмдэг ба нэрийг агуулсан бүтэн лого. ~48px өндөртэй харагдана. SVG-г санал болгоно. <500KB.',
+							options: { hotspot: true, accept: 'image/svg+xml,image/png' },
+							validation: maxImageSize(0.5)
 						})
 					],
 					preview: {

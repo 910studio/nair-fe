@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { CalendarIcon } from '@sanity/icons';
+import { maxImageSize } from '../lib/maxFileSize';
 
 export const season = defineType({
 	name: 'season',
@@ -54,7 +55,9 @@ export const season = defineType({
 			name: 'coverImage',
 			title: 'Толгой зураг',
 			type: 'image',
-			options: { hotspot: true }
+			description: '16:9, ~1920×1080. <4MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(4)
 		}),
 		defineField({
 			name: 'accentColor',

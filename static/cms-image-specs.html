@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="mn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nair CMS — Зургийн стандарт</title>
+<style>
+	:root {
+		--red: #9e1c21;
+		--ink: #06090c;
+		--muted: rgba(6, 9, 12, 0.64);
+		--soft: rgba(6, 9, 12, 0.04);
+		--line: rgba(6, 9, 12, 0.08);
+		--bg: #f9f9fb;
+	}
+	* { box-sizing: border-box; }
+	html, body {
+		margin: 0;
+		padding: 0;
+		background: var(--bg);
+		color: var(--ink);
+		font-family: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+		font-size: 16px;
+		line-height: 1.5;
+	}
+	.wrap {
+		max-width: 960px;
+		margin: 0 auto;
+		padding: 64px 32px;
+	}
+	header {
+		margin-bottom: 48px;
+		padding-bottom: 32px;
+		border-bottom: 2px solid var(--ink);
+	}
+	header h1 {
+		margin: 0 0 8px;
+		font-size: 40px;
+		font-weight: 700;
+		letter-spacing: -0.02em;
+	}
+	header p {
+		margin: 0;
+		color: var(--muted);
+		font-size: 18px;
+	}
+	section {
+		margin-bottom: 48px;
+		padding: 32px;
+		background: #fff;
+		border-radius: 16px;
+		outline: 1px solid var(--line);
+		outline-offset: -1px;
+		box-shadow: 0 8px 24px rgba(6, 9, 12, 0.02);
+	}
+	section h2 {
+		margin: 0 0 8px;
+		color: var(--red);
+		font-size: 22px;
+		font-weight: 600;
+		letter-spacing: 0.01em;
+	}
+	section .lead {
+		margin: 0 0 24px;
+		color: var(--muted);
+		font-size: 14px;
+	}
+	table {
+		width: 100%;
+		border-collapse: collapse;
+		font-size: 14px;
+	}
+	thead th {
+		background: var(--soft);
+		text-align: left;
+		padding: 12px 16px;
+		font-weight: 600;
+		font-size: 12px;
+		text-transform: uppercase;
+		letter-spacing: 0.06em;
+		color: var(--muted);
+		border-bottom: 1px solid var(--line);
+	}
+	tbody td {
+		padding: 16px;
+		border-bottom: 1px solid var(--line);
+		vertical-align: top;
+	}
+	tbody tr:last-child td {
+		border-bottom: 0;
+	}
+	tbody tr:hover {
+		background: rgba(6, 9, 12, 0.015);
+	}
+	td.field {
+		font-weight: 600;
+		color: var(--ink);
+		width: 28%;
+	}
+	td.field small {
+		display: block;
+		margin-top: 2px;
+		font-weight: 400;
+		color: var(--muted);
+		font-size: 12px;
+	}
+	td.aspect {
+		font-family: 'SF Mono', Menlo, monospace;
+		font-size: 13px;
+		color: var(--muted);
+		width: 14%;
+	}
+	td.resolution {
+		font-family: 'SF Mono', Menlo, monospace;
+		font-size: 13px;
+		font-weight: 600;
+		width: 22%;
+	}
+	td.resolution strong {
+		color: var(--red);
+	}
+	td.notes {
+		color: var(--muted);
+		font-size: 13px;
+		line-height: 1.5;
+	}
+	.rules {
+		background: #fff8ed;
+		border-radius: 16px;
+		outline: 1px solid #f0d090;
+		outline-offset: -1px;
+		padding: 28px 32px;
+	}
+	.rules h2 {
+		color: #8a6b18;
+		margin-bottom: 16px;
+	}
+	.rules ul {
+		margin: 0;
+		padding-left: 20px;
+		font-size: 14px;
+		line-height: 1.7;
+	}
+	.rules li {
+		margin-bottom: 6px;
+	}
+	.rules code {
+		background: rgba(0, 0, 0, 0.06);
+		padding: 1px 6px;
+		border-radius: 4px;
+		font-size: 13px;
+	}
+	footer {
+		margin-top: 48px;
+		text-align: center;
+		color: var(--muted);
+		font-size: 13px;
+	}
+	.legend {
+		display: flex;
+		gap: 16px;
+		flex-wrap: wrap;
+		margin-top: 16px;
+		font-size: 13px;
+	}
+	.chip {
+		padding: 4px 12px;
+		background: var(--soft);
+		border-radius: 999px;
+		color: var(--muted);
+	}
+	@media (max-width: 720px) {
+		.wrap { padding: 32px 20px; }
+		section { padding: 20px; }
+		header h1 { font-size: 28px; }
+		table { font-size: 13px; }
+		thead { display: none; }
+		tbody td {
+			display: block;
+			padding: 4px 0;
+			border: 0;
+		}
+		tbody tr {
+			display: block;
+			padding: 16px 0;
+			border-bottom: 1px solid var(--line);
+		}
+		td.field { width: auto; font-size: 16px; }
+		td.aspect::before { content: 'Харьцаа: '; color: var(--muted); }
+		td.resolution::before { content: 'Хэмжээ: '; color: var(--muted); }
+	}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+	<h1>Nair Entertainment — Зургийн стандарт</h1>
+	<p>CMS-д зураг оруулахдаа дараах хэмжээнүүдийг баримтлана уу. Хэт жижиг зураг бүдгэрнэ, хэт том зураг хуудас удаашируулна.</p>
+	<div class="legend">
+		<span class="chip">✦ Хамгийн чухал зургууд</span>
+		<span class="chip">Хэмжээ = өргөн × өндөр</span>
+		<span class="chip">JPG: гэрэл зураг · SVG/PNG: лого</span>
+	</div>
+</header>
+
+<section>
+	<h2>1. Толгой хэсгийн видеоны постер (Нүүр хуудас)</h2>
+	<p class="lead">Видео ачаалагдах хүртэл харагдах статик зураг.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Desktop постер<small>videoPoster</small></td>
+				<td class="aspect">16:9</td>
+				<td class="resolution"><strong>1920×1080</strong><br>min 1280×720</td>
+				<td class="notes">Том дэлгэцийн видеоны статик хувилбар. Хэвтээ.</td>
+			</tr>
+			<tr>
+				<td class="field">Mobile постер<small>videoMobilePoster</small></td>
+				<td class="aspect">9:16</td>
+				<td class="resolution"><strong>1080×1920</strong><br>min 720×1280</td>
+				<td class="notes">Гар утсанд харагдах босоо хувилбар.</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<h2>✦ 2. Үйлчилгээний хуудас</h2>
+	<p class="lead">Үйлчилгээний дэлгэрэнгүй хуудасны баннер, цомог, картын зургууд.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Баннер зураг<small>Толгой зураг</small></td>
+				<td class="aspect">2:1 өргөн</td>
+				<td class="resolution"><strong>2560×1280</strong><br>min 1920×960</td>
+				<td class="notes">Хуудасны дээд талын өргөн баннер. Гол объект голд эсвэл доод 2/3-д.</td>
+			</tr>
+			<tr>
+				<td class="field">Цомгийн зургууд<small>gallery</small></td>
+				<td class="aspect">3:2 хэвтээ</td>
+				<td class="resolution"><strong>2000×1333</strong></td>
+				<td class="notes">Доод хэсгийн слайдер. Олон зураг оруулж болно.</td>
+			</tr>
+			<tr>
+				<td class="field">Big layout сонголтын зураг<small>option image</small></td>
+				<td class="aspect">16:10 хэвтээ</td>
+				<td class="resolution"><strong>960×600</strong><br>min 600×375</td>
+				<td class="notes">Жижиг карт дотор бяцхан зураг харагдана.</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<h2>✦ 3. Уран бүтээлчийн зураг</h2>
+	<p class="lead">Жагсаалт болон карт дээр харагдах хөрөг.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Уран бүтээлчийн зураг<small>photo</small></td>
+				<td class="aspect">4:5 эсвэл 1:1</td>
+				<td class="resolution"><strong>800×1000</strong><br>эсвэл 800×800</td>
+				<td class="notes">
+					Хөрөг зураг. Нүүр голд төвлөрсөн байна. Карт дотор автомат кадрлагдана —
+					зүсэгдэх магадлалтай тул объектыг хэт ирмэгт байрлуулахгүй.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<h2>4. Нүүр хуудасны хэсгүүд</h2>
+	<p class="lead">Танилцуулга, ангилал, бусад хэсгүүдийн зургууд.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Танилцуулга зураг<small>intro image · Section 2</small></td>
+				<td class="aspect">4:5 босоо</td>
+				<td class="resolution"><strong>1600×2000</strong></td>
+				<td class="notes">"Бидний тухай" хэсгийн зураг. Босоо ба портрет.</td>
+			</tr>
+			<tr>
+				<td class="field">Ангилалын карт<small>discipline card image</small></td>
+				<td class="aspect">16:9 хэвтээ</td>
+				<td class="resolution"><strong>1200×680</strong></td>
+				<td class="notes">Carousel дээр харагдах жижиг карт. Гол объект голд.</td>
+			</tr>
+			<tr>
+				<td class="field">Ангилалын дэлгэрэнгүй баннер<small>discipline heroImage</small></td>
+				<td class="aspect">16:9 өргөн</td>
+				<td class="resolution"><strong>2400×1260</strong></td>
+				<td class="notes">Ангилалын дотоод хуудасны том баннер.</td>
+			</tr>
+			<tr>
+				<td class="field">Ангилалын цомог<small>discipline gallery</small></td>
+				<td class="aspect">Дурын</td>
+				<td class="resolution"><strong>2000px</strong><br>урт талын дагуу</td>
+				<td class="notes">Олон зураг оруулж болно.</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<h2>5. Лого ба түнш</h2>
+	<p class="lead">Hard requirement: <strong>дэвсгэр тунгалаг</strong> байна.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Түнш / collab лого<small>partner logo</small></td>
+				<td class="aspect">2.5:1 өргөн</td>
+				<td class="resolution"><strong>SVG</strong> (хамгийн сайн)<br>эсвэл 480×192 PNG</td>
+				<td class="notes">
+					Тунгалаг дэвсгэр. Нийтлэг ~240×96px-ээр харагдана.
+					SVG-г илүү сонгох. PNG бол transparent background заавал.
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section>
+	<h2>6. Эвент ба улирлын зураг</h2>
+	<p class="lead">Тийм олон ашиглагдахгүй, гэхдээ ижил стандарт.</p>
+	<table>
+		<thead><tr><th>Талбар</th><th>Харьцаа</th><th>Шилдэг хэмжээ</th><th>Тэмдэглэл</th></tr></thead>
+		<tbody>
+			<tr>
+				<td class="field">Эвент баннер<small>event hero</small></td>
+				<td class="aspect">16:9</td>
+				<td class="resolution"><strong>1920×1080</strong></td>
+				<td class="notes">Эвентийн дэлгэрэнгүй хуудасны баннер.</td>
+			</tr>
+			<tr>
+				<td class="field">Эвент цомог<small>event gallery</small></td>
+				<td class="aspect">Дурын</td>
+				<td class="resolution"><strong>2000px</strong><br>урт талын дагуу</td>
+				<td class="notes">Олон зураг.</td>
+			</tr>
+			<tr>
+				<td class="field">Улирлын зураг<small>season image</small></td>
+				<td class="aspect">16:9</td>
+				<td class="resolution"><strong>1920×1080</strong></td>
+				<td class="notes">Улирлын баннер.</td>
+			</tr>
+		</tbody>
+	</table>
+</section>
+
+<section class="rules">
+	<h2>⚡ Ерөнхий дүрэм</h2>
+	<ul>
+		<li><strong>Формат:</strong> зураг бол <code>.jpg</code>, ил тод дэвсгэртэй бол <code>.png</code>, лого бол <code>.svg</code>.</li>
+		<li><strong>Чанар:</strong> JPEG-ийг 80–90%-аар экспортлоорой. Sanity дахин шахна.</li>
+		<li><strong>Хэмжээ:</strong> Ихэнх зураг <strong>1MB-аас бага</strong>. Том баннер 2MB хүртэл. Лого 200KB-аас бага.</li>
+		<li><strong>Өнгө:</strong> sRGB өнгөний орон зай ашиглана (Adobe RGB биш).</li>
+		<li><strong>Бичвэр:</strong> Зураг дээр бичвэр битгий нэмээрэй — англи/монгол хэлрүү орчуулагдахгүй.</li>
+		<li><strong>Гол объект:</strong> Голд эсвэл дээд 2/3-д байрлуулна. Гар утсан дээр кроп хийгдвэл хажуу талын объект тасарна.</li>
+		<li><strong>Resolution:</strong> Хэт том ачаалахаас зайлсхий — 4K зураг хэрэггүй. Жагсаалтад заасан хэмжээ хүрэлцэнэ.</li>
+	</ul>
+</section>
+
+<footer>
+	<p>Энэ баримтыг шаардлагатай үед шинэчилнэ.<br>nair.mn · 910studio · 2026</p>
+</footer>
+
+</div>
+</body>
+</html>

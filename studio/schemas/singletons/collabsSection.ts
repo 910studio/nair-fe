@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { UsersIcon } from '@sanity/icons';
+import { maxImageSize } from '../lib/maxFileSize';
 
 export const collabsSection = defineType({
 	name: 'collabsSection',
@@ -32,8 +33,9 @@ export const collabsSection = defineType({
 							title: 'Лого (тунгалаг дэвсгэр дээр цагаан)',
 							type: 'image',
 							description:
-								'Тэмдэг ба нэрийг агуулсан бүтэн лого. ~48px өндөртэй харагдана.',
-							options: { hotspot: true, accept: 'image/svg+xml,image/png' }
+								'Тэмдэг ба нэрийг агуулсан бүтэн лого. ~48px өндөртэй харагдана. SVG-г санал болгоно. <500KB.',
+							options: { hotspot: true, accept: 'image/svg+xml,image/png' },
+							validation: maxImageSize(0.5)
 						})
 					],
 					preview: {

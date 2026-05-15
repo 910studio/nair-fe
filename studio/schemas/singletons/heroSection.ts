@@ -1,6 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { PlayIcon } from '@sanity/icons';
-import { maxFileSize } from '../lib/maxFileSize';
+import { maxFileSize, maxImageSize } from '../lib/maxFileSize';
 
 export const heroSection = defineType({
 	name: 'heroSection',
@@ -37,8 +37,9 @@ export const heroSection = defineType({
 			title: 'Desktop постер зураг',
 			type: 'image',
 			group: 'video',
-			description: 'Видео ачааллах хүртэл буюу амжилтгүй болсон үед харагдана.',
-			options: { hotspot: true }
+			description: 'Видео ачааллах хүртэл буюу амжилтгүй болсон үед харагдана. <2MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(2)
 		}),
 		defineField({
 			name: 'videoMobileWebm',
@@ -63,8 +64,9 @@ export const heroSection = defineType({
 			title: 'Mobile постер зураг',
 			type: 'image',
 			group: 'videoMobile',
-			description: 'Mobile видео ачааллах хүртэл харагдана. Хоосон үлдвэл desktop постер ашиглана.',
-			options: { hotspot: true }
+			description: 'Mobile видео ачааллах хүртэл харагдана. Хоосон үлдвэл desktop постер ашиглана. <2MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(2)
 		}),
 		defineField({
 			name: 'eyebrow',

@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { StarIcon } from '@sanity/icons';
+import { maxImageSize, maxInlineImageSize } from '../lib/maxFileSize';
 
 export const event = defineType({
 	name: 'event',
@@ -82,14 +83,23 @@ export const event = defineType({
 			title: 'Толгой зураг',
 			type: 'image',
 			group: 'media',
-			options: { hotspot: true }
+			description: '16:9, ~1920×1080. <4MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(4)
 		}),
 		defineField({
 			name: 'gallery',
 			title: 'Зургийн цомог',
 			type: 'array',
 			group: 'media',
-			of: [{ type: 'image', options: { hotspot: true } }]
+			description: 'Зураг тус бүр <3MB.',
+			of: [
+				{
+					type: 'image',
+					options: { hotspot: true },
+					validation: maxInlineImageSize(3)
+				}
+			]
 		}),
 		defineField({
 			name: 'featured',

@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { TextIcon } from '@sanity/icons';
+import { maxImageSize } from '../lib/maxFileSize';
 
 export const introSection = defineType({
 	name: 'introSection',
@@ -62,7 +63,9 @@ export const introSection = defineType({
 			title: 'Зураг',
 			type: 'image',
 			group: 'media',
-			options: { hotspot: true }
+			description: 'Жишээ: 1600×2000. <3MB.',
+			options: { hotspot: true },
+			validation: maxImageSize(3)
 		})
 	],
 	preview: {
