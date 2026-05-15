@@ -7,33 +7,58 @@ export const heroSection = defineType({
 	type: 'document',
 	icon: PlayIcon,
 	groups: [
-		{ name: 'video', title: 'Видео' },
+		{ name: 'video', title: 'Видео — Desktop' },
+		{ name: 'videoMobile', title: 'Видео — Mobile' },
 		{ name: 'copy', title: 'Бичвэр' },
 		{ name: 'cta', title: 'Үйлдлийн товч' }
 	],
 	fields: [
 		defineField({
 			name: 'videoWebm',
-			title: 'Видео — WebM',
+			title: 'Desktop — WebM',
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/webm' },
-			description: 'Орчин үеийн хөтчид зориулсан хувилбар. Файлын хэмжээ багатай.'
+			description: 'Орчин үеийн хөтчид зориулсан хувилбар. 16:9, 1920×1080, <10MB.'
 		}),
 		defineField({
 			name: 'videoMp4',
-			title: 'Видео — MP4',
+			title: 'Desktop — MP4',
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/mp4' },
-			description: 'Safari хөтөчид зориулсан нэмэлт. Үргэлж байршуулна уу.'
+			description: 'Safari хөтөчид зориулсан нэмэлт. 16:9, 1920×1080, <10MB. Үргэлж байршуулна уу.'
 		}),
 		defineField({
 			name: 'videoPoster',
-			title: 'Постер зураг',
+			title: 'Desktop постер зураг',
 			type: 'image',
 			group: 'video',
 			description: 'Видео ачааллах хүртэл буюу амжилтгүй болсон үед харагдана.',
+			options: { hotspot: true }
+		}),
+		defineField({
+			name: 'videoMobileWebm',
+			title: 'Mobile — WebM',
+			type: 'file',
+			group: 'videoMobile',
+			options: { accept: 'video/webm' },
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB.'
+		}),
+		defineField({
+			name: 'videoMobileMp4',
+			title: 'Mobile — MP4',
+			type: 'file',
+			group: 'videoMobile',
+			options: { accept: 'video/mp4' },
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB. Хоосон үлдвэл desktop видео ашиглана.'
+		}),
+		defineField({
+			name: 'videoMobilePoster',
+			title: 'Mobile постер зураг',
+			type: 'image',
+			group: 'videoMobile',
+			description: 'Mobile видео ачааллах хүртэл харагдана. Хоосон үлдвэл desktop постер ашиглана.',
 			options: { hotspot: true }
 		}),
 		defineField({

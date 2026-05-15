@@ -27,6 +27,9 @@ export interface HeroSection {
 	videoWebm?: SanityFile;
 	videoMp4?: SanityFile;
 	videoPoster?: SanityImage;
+	videoMobileWebm?: SanityFile;
+	videoMobileMp4?: SanityFile;
+	videoMobilePoster?: SanityImage;
 	eyebrow?: Localized;
 	headline?: Localized;
 	subheadline?: Localized;

@@ -15,14 +15,28 @@
 	const locale = $derived(getLocale());
 
 	// ─── Hero (s1) ───
-	const heroVideoSrc = $derived(
+	let isMobileViewport = $state(false);
+
+	const desktopVideoSrc = $derived(
 		fileUrl(data.hero?.videoMp4?.asset) ??
 			fileUrl(data.hero?.videoWebm?.asset) ??
 			'/client-materials/hero-section-video.mp4'
 	);
+	const mobileVideoSrc = $derived(
+		fileUrl(data.hero?.videoMobileMp4?.asset) ??
+			fileUrl(data.hero?.videoMobileWebm?.asset) ??
+			null
+	);
+	const heroVideoSrc = $derived(
+		isMobileViewport && mobileVideoSrc ? mobileVideoSrc : desktopVideoSrc
+	);
 	const heroPosterSrc = $derived(
-		SANITY_CONFIGURED && data.hero?.videoPoster
-			? imgUrl(data.hero.videoPoster, { w: 1280, fit: 'crop', q: 60 })
+		SANITY_CONFIGURED
+			? (isMobileViewport && data.hero?.videoMobilePoster
+				? imgUrl(data.hero.videoMobilePoster, { w: 1080, fit: 'crop', q: 60 })
+				: data.hero?.videoPoster
+					? imgUrl(data.hero.videoPoster, { w: 1280, fit: 'crop', q: 60 })
+					: undefined)
 			: undefined
 	);
 	const heroTitle = $derived(t(data.hero?.headline, locale) || m.home_hero_title());
@@ -97,7 +111,17 @@
 	onMount(() => {
 		// Clear the armed slug once any incoming morph has had time to play.
 		const timer = setTimeout(() => disciplineTransition.disarm(), 700);
-		return () => clearTimeout(timer);
+
+		// Track viewport for hero video — swap to mobile asset when available.
+		const mq = window.matchMedia('(max-width: 768px)');
+		isMobileViewport = mq.matches;
+		const onMqChange = (e: MediaQueryListEvent) => (isMobileViewport = e.matches);
+		mq.addEventListener('change', onMqChange);
+
+		return () => {
+			clearTimeout(timer);
+			mq.removeEventListener('change', onMqChange);
+		};
 	});
 
 	// Apple-Music-style image pan: images lag behind the shelf as it scrolls.
