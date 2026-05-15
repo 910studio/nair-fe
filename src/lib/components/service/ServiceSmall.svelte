@@ -287,13 +287,12 @@
 		overflow: hidden;
 		display: flex;
 		flex-direction: column;
-		align-items: center;
-		height: 140px;
 	}
 	.artist-card__media {
-		flex: 1 1 0;
 		width: 100%;
+		aspect-ratio: 1 / 1;
 		background: #eef0f4;
+		flex: none;
 	}
 	.artist-card__media img {
 		width: 100%;
@@ -302,15 +301,16 @@
 		display: block;
 	}
 	.artist-card__meta {
-		padding: 8px;
+		flex: none;
+		padding: 10px 8px;
 		text-align: center;
 	}
 	.artist-card__name {
 		margin: 0;
 		color: #06090c;
-		font-size: 12px;
-		font-weight: 500;
-		line-height: 16px;
+		font-size: 13px;
+		font-weight: 600;
+		line-height: 18px;
 		letter-spacing: 0.24px;
 	}
 	.artist-card__role {
@@ -536,11 +536,9 @@
 		.artist-card {
 			flex: none;
 			width: 120px;
-			height: 140px;
 		}
 		.artist-card__media {
-			min-height: 0;
-			height: 100%;
+			aspect-ratio: 1 / 1;
 		}
 
 		/* Plus plan body: 2 cards side-by-side filling width. */
