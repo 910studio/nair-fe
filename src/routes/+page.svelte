@@ -16,6 +16,20 @@
 
 	// ─── Hero (s1) ───
 	let isMobileViewport = $state(false);
+	let heroVideoEl: HTMLVideoElement | undefined = $state();
+	let heroMuted = $state(true);
+
+	function toggleHeroMute() {
+		heroMuted = !heroMuted;
+		if (!heroVideoEl) return;
+		heroVideoEl.muted = heroMuted;
+		if (!heroMuted) {
+			heroVideoEl.play().catch(() => {
+				heroMuted = true;
+				if (heroVideoEl) heroVideoEl.muted = true;
+			});
+		}
+	}
 
 	const desktopVideoSrc = $derived(
 		fileUrl(data.hero?.videoMp4?.asset) ??
@@ -284,11 +298,12 @@
 <!-- SECTION 1 ─ hero · video bg · dark gradient · title bottom-left -->
 <section class="s1" data-bg="dark">
 	<video
+		bind:this={heroVideoEl}
 		class="s1__video"
 		src={heroVideoSrc}
 		poster={heroPosterSrc}
 		autoplay
-		muted
+		muted={heroMuted}
 		loop
 		playsinline
 		preload="auto"
@@ -296,6 +311,27 @@
 	></video>
 	<div class="s1__overlay" aria-hidden="true"></div>
 	<h1 class="s1__title">{heroTitle}</h1>
+	<button
+		type="button"
+		class="s1__mute"
+		onclick={toggleHeroMute}
+		aria-pressed={!heroMuted}
+		aria-label={heroMuted ? 'Дуу нээх' : 'Дуу хаах'}
+	>
+		{#if heroMuted}
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+				<line x1="23" y1="9" x2="17" y2="15" />
+				<line x1="17" y1="9" x2="23" y2="15" />
+			</svg>
+		{:else}
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+				<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" />
+				<path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+				<path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+			</svg>
+		{/if}
+	</button>
 </section>
 
 <!-- SECTION 2 ─ intro · two-tone headline · CTA · feature image -->
@@ -546,6 +582,52 @@
 		letter-spacing: 0.64px;
 		white-space: pre-line;
 		word-wrap: break-word;
+	}
+	.s1__mute {
+		position: absolute;
+		bottom: 24px;
+		right: 24px;
+		z-index: 3;
+		width: 48px;
+		height: 48px;
+		display: grid;
+		place-items: center;
+		padding: 0;
+		appearance: none;
+		background: rgba(6, 9, 12, 0.4);
+		border: 1px solid rgba(255, 255, 255, 0.16);
+		border-radius: 999px;
+		color: #fff;
+		cursor: pointer;
+		backdrop-filter: blur(12px);
+		-webkit-backdrop-filter: blur(12px);
+		transition:
+			background-color 0.2s ease,
+			border-color 0.2s ease,
+			transform 0.2s ease;
+	}
+	.s1__mute:hover {
+		background: rgba(6, 9, 12, 0.6);
+		border-color: rgba(255, 255, 255, 0.32);
+	}
+	.s1__mute:active {
+		transform: scale(0.95);
+	}
+	.s1__mute:focus-visible {
+		outline: 2px solid #fff;
+		outline-offset: 3px;
+	}
+	.s1__mute svg {
+		width: 20px;
+		height: 20px;
+	}
+	@media (max-width: 768px) {
+		.s1__mute {
+			bottom: 20px;
+			right: 20px;
+			width: 44px;
+			height: 44px;
+		}
 	}
 
 	/* ─── Section 2 — Intro ─── */
