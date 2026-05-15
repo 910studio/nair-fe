@@ -1,5 +1,6 @@
 import { defineType, defineField } from 'sanity';
 import { PlayIcon } from '@sanity/icons';
+import { maxFileSize } from '../lib/maxFileSize';
 
 export const heroSection = defineType({
 	name: 'heroSection',
@@ -19,7 +20,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/webm' },
-			description: 'Орчин үеийн хөтчид зориулсан хувилбар. 16:9, 1920×1080, <10MB.'
+			description: 'Орчин үеийн хөтчид зориулсан хувилбар. 16:9, 1920×1080, <10MB.',
+			validation: maxFileSize(20)
 		}),
 		defineField({
 			name: 'videoMp4',
@@ -27,7 +29,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/mp4' },
-			description: 'Safari хөтөчид зориулсан нэмэлт. 16:9, 1920×1080, <10MB. Үргэлж байршуулна уу.'
+			description: 'Safari хөтөчид зориулсан нэмэлт. 16:9, 1920×1080, <10MB. Үргэлж байршуулна уу.',
+			validation: maxFileSize(20)
 		}),
 		defineField({
 			name: 'videoPoster',
@@ -43,7 +46,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/webm' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB.'
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB.',
+			validation: maxFileSize(10)
 		}),
 		defineField({
 			name: 'videoMobileMp4',
@@ -51,7 +55,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/mp4' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB. Хоосон үлдвэл desktop видео ашиглана.'
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB. Хоосон үлдвэл desktop видео ашиглана.',
+			validation: maxFileSize(10)
 		}),
 		defineField({
 			name: 'videoMobilePoster',
