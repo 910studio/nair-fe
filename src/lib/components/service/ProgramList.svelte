@@ -75,12 +75,12 @@
 		width: 6px;
 		height: 6px;
 		border-radius: 50%;
-		background: rgba(158, 28, 33, 0.6);
+		background: rgba(6, 9, 12, 0.32);
 		transform: translate(-50%, -50%);
 	}
 	.program__item--inactive .program__dot::before {
 		background: transparent;
-		box-shadow: inset 0 0 0 1.5px rgba(158, 28, 33, 0.45);
+		box-shadow: inset 0 0 0 1.5px rgba(6, 9, 12, 0.24);
 	}
 	.program__label {
 		flex: 1 1 0;
