@@ -110,7 +110,8 @@ function toLocalShape(s: SanityService): LocalService {
 			title: s.programmeTitle ?? { en: 'Programme', mn: 'Хөтөлбөр' },
 			items: (s.programmeItems ?? []).map((i) => ({
 				label: i.label,
-				active: i.active
+				active: i.active,
+				...(i.description && { description: i.description })
 			}))
 		},
 		duration: s.duration ?? ({ en: '', mn: '' } as Localized),

@@ -152,7 +152,7 @@ export interface ServiceTipsRaw {
 export interface ServiceSmall extends ServiceBase {
 	layout: 'small';
 	programmeTitle?: Localized;
-	programmeItems?: { label: Localized; active: boolean }[];
+	programmeItems?: { label: Localized; active: boolean; description?: Localized }[];
 	duration?: Localized;
 	artists?: Localized;
 	planRosters?: ServicePlanRosterRaw[];

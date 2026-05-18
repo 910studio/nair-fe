@@ -97,6 +97,12 @@ export const service = defineType({
 					type: 'object',
 					fields: [
 						{ name: 'label', title: 'Нэр', type: 'localizedString' },
+						{
+							name: 'description',
+							title: 'Тайлбар',
+							type: 'localizedText',
+							description: 'Хоосон бол сонголтонд info товч харагдахгүй.'
+						},
 						{ name: 'active', title: 'Идэвхтэй', type: 'boolean', initialValue: true }
 					],
 					preview: {

@@ -27,7 +27,7 @@ export interface ServiceSmall extends ServiceBase {
 	layout: 'small';
 	program: {
 		title: Localized;
-		items: { label: Localized; active: boolean }[];
+		items: { label: Localized; active: boolean; description?: Localized }[];
 	};
 	duration: Localized;
 	artists: Localized;
