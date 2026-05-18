@@ -20,7 +20,7 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/webm' },
-			description: 'Орчин үеийн хөтчид зориулсан хувилбар. 16:9, 1920×1080, <10MB.',
+			description: 'Орчин үеийн хөтчид зориулсан хувилбар. 16:9, 1920×1080, <20MB.',
 			validation: maxFileSize(20)
 		}),
 		defineField({
@@ -29,7 +29,7 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'video',
 			options: { accept: 'video/mp4' },
-			description: 'Safari хөтөчид зориулсан нэмэлт. 16:9, 1920×1080, <10MB. Үргэлж байршуулна уу.',
+			description: 'Safari хөтөчид зориулсан нэмэлт. 16:9, 1920×1080, <20MB. Үргэлж байршуулна уу.',
 			validation: maxFileSize(20)
 		}),
 		defineField({
@@ -47,7 +47,7 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/webm' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB.',
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <10MB.',
 			validation: maxFileSize(10)
 		}),
 		defineField({
@@ -56,7 +56,7 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/mp4' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <5MB. Хоосон үлдвэл desktop видео ашиглана.',
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <10MB. Хоосон үлдвэл desktop видео ашиглана.',
 			validation: maxFileSize(10)
 		}),
 		defineField({
