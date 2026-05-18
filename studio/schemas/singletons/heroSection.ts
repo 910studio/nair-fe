@@ -47,8 +47,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/webm' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <10MB.',
-			validation: maxFileSize(10)
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <15MB.',
+			validation: maxFileSize(15)
 		}),
 		defineField({
 			name: 'videoMobileMp4',
@@ -56,8 +56,8 @@ export const heroSection = defineType({
 			type: 'file',
 			group: 'videoMobile',
 			options: { accept: 'video/mp4' },
-			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <10MB. Хоосон үлдвэл desktop видео ашиглана.',
-			validation: maxFileSize(10)
+			description: 'Гар утсанд зориулсан босоо хувилбар. 9:16, 1080×1920, <15MB. Хоосон үлдвэл desktop видео ашиглана.',
+			validation: maxFileSize(15)
 		}),
 		defineField({
 			name: 'videoMobilePoster',
