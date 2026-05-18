@@ -72,15 +72,15 @@
 		position: absolute;
 		top: 50%;
 		left: 50%;
-		width: 10px;
-		height: 10px;
+		width: 6px;
+		height: 6px;
 		border-radius: 50%;
-		background: #9e1c21;
+		background: rgba(158, 28, 33, 0.6);
 		transform: translate(-50%, -50%);
 	}
 	.program__item--inactive .program__dot::before {
 		background: transparent;
-		box-shadow: inset 0 0 0 2px #9e1c21;
+		box-shadow: inset 0 0 0 1.5px rgba(158, 28, 33, 0.45);
 	}
 	.program__label {
 		flex: 1 1 0;
