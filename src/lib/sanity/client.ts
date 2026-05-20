@@ -1,9 +1,13 @@
 import { createClient, type SanityClient } from '@sanity/client';
-import { env } from '$env/dynamic/public';
+import {
+	PUBLIC_SANITY_PROJECT_ID,
+	PUBLIC_SANITY_DATASET,
+	PUBLIC_SANITY_API_VERSION
+} from '$env/static/public';
 
-export const SANITY_PROJECT_ID = env.PUBLIC_SANITY_PROJECT_ID;
-export const SANITY_DATASET = env.PUBLIC_SANITY_DATASET || 'production';
-export const SANITY_API_VERSION = env.PUBLIC_SANITY_API_VERSION || '2024-10-01';
+export const SANITY_PROJECT_ID = PUBLIC_SANITY_PROJECT_ID;
+export const SANITY_DATASET = PUBLIC_SANITY_DATASET || 'production';
+export const SANITY_API_VERSION = PUBLIC_SANITY_API_VERSION || '2024-10-01';
 export const SANITY_CONFIGURED = Boolean(SANITY_PROJECT_ID);
 
 let client: SanityClient | null = null;
