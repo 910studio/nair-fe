@@ -132,8 +132,26 @@
 		const onMqChange = (e: MediaQueryListEvent) => (isMobileViewport = e.matches);
 		mq.addEventListener('change', onMqChange);
 
+		// Autoplay can silently bail on iOS/Safari when the element is hidden
+		// behind a fixed overlay (loading screen) during initial mount. Force
+		// a manual play() once the video can play — muted+playsinline keeps
+		// browsers happy. Retry on first user gesture as a last resort.
+		const tryPlay = () => heroVideoEl?.play().catch(() => undefined);
+		const onCanPlay = () => tryPlay();
+		heroVideoEl?.addEventListener('canplay', onCanPlay, { once: true });
+		const onFirstGesture = () => tryPlay();
+		window.addEventListener('pointerdown', onFirstGesture, { once: true });
+		window.addEventListener('touchstart', onFirstGesture, { once: true, passive: true });
+		// Also kick it after a short delay — covers the case where the loading
+		// screen dismisses before canplay fires.
+		const playKick = setTimeout(tryPlay, 800);
+
 		return () => {
 			clearTimeout(timer);
+			clearTimeout(playKick);
+			heroVideoEl?.removeEventListener('canplay', onCanPlay);
+			window.removeEventListener('pointerdown', onFirstGesture);
+			window.removeEventListener('touchstart', onFirstGesture);
 			mq.removeEventListener('change', onMqChange);
 		};
 	});
@@ -676,9 +694,9 @@
 		outline: 1px solid rgba(0, 0, 0, 0.08);
 		outline-offset: -1px;
 		font-size: 18px;
-		font-weight: 600;
+		font-weight: 800;
 		line-height: 24px;
-		letter-spacing: 0.36px;
+		letter-spacing: 0.4px;
 		text-decoration: none;
 		cursor: pointer;
 		overflow: hidden;

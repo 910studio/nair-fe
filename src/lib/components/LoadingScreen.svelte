@@ -7,7 +7,7 @@
 		onDismiss: () => void;
 	};
 
-	let { maxDuration = 4500, minDuration = 2200, onDismiss }: Props = $props();
+	let { maxDuration = 6000, minDuration = 1600, onDismiss }: Props = $props();
 
 	let leaving = $state(false);
 
@@ -17,36 +17,71 @@
 		setTimeout(onDismiss, 600);
 	}
 
-	function findCriticalAsset(): string | null {
-		const v = document.querySelector<HTMLVideoElement>('video[poster]');
-		if (v?.poster) return v.poster;
-		const fp = document.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
-		if (fp?.src) return fp.src;
-		return null;
+	// Wait until the hero video can actually play (or its poster is in cache).
+	// Falls back to any fetchpriority="high" image. Polls briefly because the
+	// page mounts after this component but before any media is in the DOM.
+	function whenHeroReady(): Promise<void> {
+		return new Promise((resolve) => {
+			let settled = false;
+			const done = () => {
+				if (settled) return;
+				settled = true;
+				resolve();
+			};
+
+			let tries = 0;
+			const tryAttach = () => {
+				const v = document.querySelector<HTMLVideoElement>('video[poster], video[autoplay]');
+				if (v) {
+					// HAVE_FUTURE_DATA — enough buffered to start playback
+					if (v.readyState >= 3) return done();
+					v.addEventListener('canplay', done, { once: true });
+					v.addEventListener('loadeddata', done, { once: true });
+					v.addEventListener('playing', done, { once: true });
+					// If the video fails entirely, don't block forever — fall through.
+					v.addEventListener('error', done, { once: true });
+					return;
+				}
+
+				const img = document.querySelector<HTMLImageElement>('img[fetchpriority="high"]');
+				if (img) {
+					if (img.complete) return done();
+					img.addEventListener('load', done, { once: true });
+					img.addEventListener('error', done, { once: true });
+					return;
+				}
+
+				// No critical asset visible yet — keep trying for a bit.
+				if (tries++ < 30) setTimeout(tryAttach, 80);
+				else done();
+			};
+
+			tryAttach();
+		});
 	}
 
 	onMount(() => {
 		const t0 = performance.now();
 		const hardStop = setTimeout(dismiss, maxDuration);
 
-		const ready = () => {
+		// Lock scroll while the intro is on top — prevents the page underneath
+		// from scrolling on touch/wheel input.
+		const prevOverflow = document.documentElement.style.overflow;
+		const prevBodyOverflow = document.body.style.overflow;
+		document.documentElement.style.overflow = 'hidden';
+		document.body.style.overflow = 'hidden';
+
+		whenHeroReady().then(() => {
 			const elapsed = performance.now() - t0;
 			const remaining = Math.max(0, minDuration - elapsed);
 			setTimeout(dismiss, remaining);
+		});
+
+		return () => {
+			clearTimeout(hardStop);
+			document.documentElement.style.overflow = prevOverflow;
+			document.body.style.overflow = prevBodyOverflow;
 		};
-
-		const url = findCriticalAsset();
-		if (url) {
-			const img = new Image();
-			img.onload = ready;
-			img.onerror = ready;
-			img.src = url;
-			if (img.complete) ready();
-		} else {
-			setTimeout(dismiss, minDuration);
-		}
-
-		return () => clearTimeout(hardStop);
 	});
 </script>
 
@@ -95,6 +130,9 @@
 		display: grid;
 		place-items: center;
 		transition: opacity 0.6s ease;
+		overflow: hidden;
+		touch-action: none;
+		overscroll-behavior: contain;
 	}
 	.intro.leaving {
 		opacity: 0;
