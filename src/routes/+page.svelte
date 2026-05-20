@@ -695,11 +695,20 @@
 		inset: 0;
 		background-image: url('/client-materials/pattern-bold.svg');
 		background-repeat: repeat-x;
-		background-position: center;
-		background-size: auto 100%;
+		background-position: 0 center;
+		background-size: 260px auto;
 		opacity: 0.32;
 		pointer-events: none;
 		z-index: 0;
+		animation: s2-cta-belt 18s linear infinite;
+	}
+	.s2__cta:hover::before {
+		animation-play-state: paused;
+	}
+	@keyframes s2-cta-belt {
+		to {
+			background-position: -260px center;
+		}
 	}
 	.s2__cta:hover {
 		background-color: #b32228;
