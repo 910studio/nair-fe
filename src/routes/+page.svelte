@@ -353,20 +353,21 @@
 			aria-haspopup="dialog"
 			aria-expanded={drawer.open}
 		>
-			<span>{introCtaLabel}</span>
-			<svg
-				class="s2__cta-arrow"
-				viewBox="0 0 24 24"
-				fill="none"
-				stroke="currentColor"
-				stroke-width="2"
-				stroke-linecap="round"
-				stroke-linejoin="round"
-				aria-hidden="true"
-			>
-				<line x1="3" y1="12" x2="21" y2="12" />
-				<polyline points="14 6 21 12 14 18" />
-			</svg>
+			<span class="s2__cta-label">{introCtaLabel}</span>
+			<span class="s2__cta-chip" aria-hidden="true">
+				<svg
+					class="s2__cta-arrow"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2.2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+				>
+					<line x1="3" y1="12" x2="21" y2="12" />
+					<polyline points="14 6 21 12 14 18" />
+				</svg>
+			</span>
 		</button>
 	</div>
 	<img class="s2__media" src={introImageSrc} alt="" loading="lazy" />
@@ -660,18 +661,19 @@
 		font-style: normal;
 	}
 	.s2__cta {
+		position: relative;
 		appearance: none;
 		border: 0;
 		font: inherit;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		gap: 12px;
-		padding: 16px 20px 16px 24px;
-		background: #06090c;
+		gap: 20px;
+		padding: 20px 20px 20px 32px;
+		background: #9e1c21;
 		color: #fff;
-		border-radius: 12px;
-		outline: 1px solid rgba(255, 255, 255, 0.04);
+		border-radius: 16px;
+		outline: 1px solid rgba(0, 0, 0, 0.08);
 		outline-offset: -1px;
 		font-size: 18px;
 		font-weight: 600;
@@ -679,21 +681,66 @@
 		letter-spacing: 0.36px;
 		text-decoration: none;
 		cursor: pointer;
+		overflow: hidden;
+		isolation: isolate;
+		box-shadow: 0 8px 24px rgba(158, 28, 33, 0.28);
 		transition:
-			background-color 0.2s ease,
-			transform 0.2s ease;
+			transform 0.2s ease,
+			box-shadow 0.2s ease,
+			background-color 0.2s ease;
+	}
+	.s2__cta::before {
+		content: '';
+		position: absolute;
+		inset: 0;
+		background-image: url('/client-materials/pattern-bold.svg');
+		background-repeat: repeat-x;
+		background-position: center;
+		background-size: auto 100%;
+		opacity: 0.32;
+		pointer-events: none;
+		z-index: 0;
 	}
 	.s2__cta:hover {
-		background: #1a1f24;
+		background-color: #b32228;
+		transform: translateY(-2px);
+		box-shadow: 0 14px 32px rgba(158, 28, 33, 0.36);
 	}
-	.s2__cta:hover .s2__cta-arrow {
-		transform: translateX(4px);
+	.s2__cta:active {
+		transform: translateY(0);
+	}
+	.s2__cta:focus-visible {
+		outline: 3px solid #06090c;
+		outline-offset: 4px;
+	}
+	.s2__cta-label {
+		position: relative;
+		z-index: 1;
+	}
+	.s2__cta-chip {
+		position: relative;
+		z-index: 1;
+	}
+	.s2__cta-chip {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 40px;
+		height: 40px;
+		border-radius: 12px;
+		background: #fff;
+		color: #9e1c21;
+		position: relative;
+		z-index: 1;
 	}
 	.s2__cta-arrow {
-		width: 24px;
-		height: 24px;
+		width: 20px;
+		height: 20px;
 		flex: none;
 		transition: transform 0.2s ease;
+	}
+	.s2__cta:hover .s2__cta-arrow {
+		transform: translateX(3px);
 	}
 	.s2__media {
 		display: block;
@@ -1041,14 +1088,21 @@
 			letter-spacing: 0.24px;
 		}
 		.s2__cta {
-			padding: 12px 16px 12px 20px;
+			padding: 14px 14px 14px 24px;
+			gap: 14px;
 			font-size: 16px;
 			line-height: 24px;
 			letter-spacing: 0.32px;
+			border-radius: 14px;
+		}
+		.s2__cta-chip {
+			width: 36px;
+			height: 36px;
+			border-radius: 10px;
 		}
 		.s2__cta-arrow {
-			width: 20px;
-			height: 20px;
+			width: 18px;
+			height: 18px;
 		}
 		.s2__media {
 			aspect-ratio: 335 / 456;
